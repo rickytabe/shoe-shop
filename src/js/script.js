@@ -80,11 +80,34 @@ document.addEventListener('DOMContentLoaded', function() {
     const cartCount = document.querySelector('.cart-count');
     const cartTotal = document.querySelector('.cart-total span');
     const checkoutBtn = document.querySelector('.checkout-btn');
+    const menuToggle = document.querySelector('.menu-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.overlay');
+    const sidebarClose = document.querySelector('.sidebar-close');
 
-    // Testimonial slider
-    const testimonials = document.querySelectorAll('.testimonial');
-    const dots = document.querySelectorAll('.dot');
-    let currentTestimonial = 0;
+    // Mobile sidebar toggle
+    menuToggle.addEventListener('click', () => {
+        sidebar.classList.add('active');
+        overlay.classList.add('active');
+    });
+
+    sidebarClose.addEventListener('click', () => {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+    });
+
+    overlay.addEventListener('click', () => {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+    });
+
+    // Close sidebar when clicking a link
+    document.querySelectorAll('.sidebar-nav a').forEach(link => {
+        link.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+    });
 
     // Display products
     function displayProducts(filter = 'all') {
@@ -281,6 +304,10 @@ document.addEventListener('DOMContentLoaded', function() {
     checkoutBtn.addEventListener('click', checkout);
 
     // Testimonial slider
+    const testimonials = document.querySelectorAll('.testimonial');
+    const dots = document.querySelectorAll('.dot');
+    let currentTestimonial = 0;
+
     function showTestimonial(index) {
         testimonials.forEach(testimonial => testimonial.classList.remove('active'));
         dots.forEach(dot => dot.classList.remove('active'));
@@ -318,35 +345,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
-    // Mobile sidebar toggle
-const menuToggle = document.querySelector('.menu-toggle');
-const sidebar = document.querySelector('.sidebar');
-const overlay = document.querySelector('.overlay');
-const sidebarClose = document.querySelector('.sidebar-close');
-
-menuToggle.addEventListener('click', () => {
-    sidebar.classList.add('active');
-    overlay.classList.add('active');
-});
-
-sidebarClose.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-});
-
-overlay.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-});
-
-// Close sidebar when clicking a link
-document.querySelectorAll('.sidebar-nav a').forEach(link => {
-    link.addEventListener('click', () => {
-        sidebar.classList.remove('active');
-        overlay.classList.remove('active');
-    });
-});
 
     // Initialize
     displayProducts();
