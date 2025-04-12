@@ -6,6 +6,7 @@
     <title>StepUp - Premium Footwear</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" type="image/png" href="./images/favicon.png">
 </head>
 <body>
     <div class="overlay"></div>
@@ -13,9 +14,10 @@
         <span class="sidebar-close">&times;</span>
         <nav class="sidebar-nav">
             <ul>
-                <li><a href="#home">Home</a></li>
+                <li><a href="#home" class="active">Home</a></li>
                 <li><a href="#products">Products</a></li>
                 <li><a href="#about">About</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
@@ -31,9 +33,10 @@
             </div>
             <nav>
                 <ul>
-                    <li><a href="#home">Home</a></li>
+                    <li><a href="#home" class="active">Home</a></li>
                     <li><a href="#products">Products</a></li>
                     <li><a href="#about">About</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
@@ -49,7 +52,10 @@
             <div class="hero-content">
                 <h2>Step Into Style</h2>
                 <p>Discover our premium collection of footwear for every occasion</p>
-                <a href="#products" class="btn">Shop Now</a>
+                <div class="hero-buttons">
+                    <a href="#products" class="btn">Shop Now</a>
+                    <a href="#about" class="btn btn-outline">Learn More</a>
+                </div>
             </div>
         </div>
     </section>
@@ -76,6 +82,20 @@
                 <h2>About StepUp</h2>
                 <p>Founded in 2010, StepUp has been providing high-quality footwear to customers worldwide. Our mission is to combine comfort, style, and durability in every pair we create.</p>
                 <p>All our shoes are crafted with premium materials and designed by top footwear designers to ensure you always put your best foot forward.</p>
+                <div class="about-features">
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Premium Materials</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Free Shipping</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>30-Day Returns</span>
+                    </div>
+                </div>
             </div>
             <div class="about-image">
                 <img src="https://images.unsplash.com/photo-1600269452121-4f2416e55c28?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="About StepUp">
@@ -83,19 +103,40 @@
         </div>
     </section>
 
-    <section class="testimonials">
+    <section class="testimonials" id="testimonials">
         <div class="container">
             <h2>What Our Customers Say</h2>
             <div class="testimonial-slider">
                 <div class="testimonial active">
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
                     <p>"The most comfortable shoes I've ever worn. Worth every penny!"</p>
                     <h4>- Sarah Johnson</h4>
                 </div>
                 <div class="testimonial">
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
                     <p>"Great variety and excellent customer service. Will shop here again."</p>
                     <h4>- Michael Chen</h4>
                 </div>
                 <div class="testimonial">
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
                     <p>"Perfect fit and stylish design. My go-to shoe shop now."</p>
                     <h4>- David Wilson</h4>
                 </div>
@@ -111,18 +152,40 @@
     <section class="contact" id="contact">
         <div class="container">
             <h2>Contact Us</h2>
-            <form id="contact-form">
-                <div class="form-group">
-                    <input type="text" placeholder="Your Name" required>
+            <div class="contact-container">
+                <form id="contact-form">
+                    <div class="form-group">
+                        <input type="text" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="Your Message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Send Message</button>
+                </form>
+                <div class="contact-info">
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p>123 Shoe Street, Footwear City</p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <p>(123) 456-7890</p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <p>info@stepup.com</p>
+                    </div>
+                    <div class="social-icons">
+                        <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://pinterest.com" target="_blank"><i class="fab fa-pinterest"></i></a>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="email" placeholder="Your Email" required>
-                </div>
-                <div class="form-group">
-                    <textarea placeholder="Your Message" required></textarea>
-                </div>
-                <button type="submit" class="btn">Send Message</button>
-            </form>
+            </div>
         </div>
     </section>
 
@@ -143,13 +206,11 @@
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h3>Connect With Us</h3>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-pinterest"></i></a>
-                    </div>
+                    <h3>Newsletter</h3>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your Email">
+                        <button type="submit" class="btn">Subscribe</button>
+                    </form>
                 </div>
             </div>
             <div class="footer-bottom">
