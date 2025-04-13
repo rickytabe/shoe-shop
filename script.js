@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 1,
             name: "Classic White Sneakers",
-            price: 89.99,
+            price: 5500,
             category: "sneakers",
             image: "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             description: "Timeless white sneakers for everyday comfort and style."
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 2,
             name: "Leather Oxford Shoes",
-            price: 129.99,
+            price: 12000,
             category: "formal",
             image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             description: "Elegant leather oxfords perfect for formal occasions."
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 3,
             name: "Running Pro",
-            price: 109.99,
+            price: 19999,
             category: "sports",
             image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             description: "High-performance running shoes with advanced cushioning."
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 4,
             name: "Summer Sandals",
-            price: 49.99,
+            price: 4000,
             category: "sandals",
             image: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             description: "Comfortable and breathable sandals for hot summer days."
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 5,
             name: "High-Top Basketball",
-            price: 119.99,
+            price: 2500,
             category: "sneakers",
             image: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             description: "Premium basketball shoes with ankle support and grip."
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 6,
             name: "Loafers",
-            price: 79.99,
+            price: 3000,
             category: "formal",
             image: "https://images.unsplash.com/photo-1595341888016-a392ef81b7de?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             description: "Classic loafers for a smart casual look."
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 7,
             name: "Hiking Boots",
-            price: 149.99,
+            price: 18000,
             category: "sports",
             image: "https://images.unsplash.com/photo-1545289414-1c3cb1c06238?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             description: "Durable hiking boots with waterproof membrane."
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             id: 8,
             name: "Flip Flops",
-            price: 29.99,
+            price: 24000,
             category: "sandals",
             image: "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
             description: "Lightweight flip flops for beach and poolside."
@@ -134,7 +134,7 @@ menuToggle.addEventListener('click', () => {
                     <h3>${product.name}</h3>
                     <p>${product.description}</p>
                     <div class="product-price">
-                        <span class="price">$${product.price.toFixed(2)}</span>
+                        <span class="price">XAF ${product.price}</span>
                         <button class="add-to-cart" data-id="${product.id}">
                             <i class="fas fa-plus"></i>
                         </button>
@@ -201,7 +201,7 @@ menuToggle.addEventListener('click', () => {
                 </div>
                 <div class="cart-item-details">
                     <h4>${item.name}</h4>
-                    <p class="cart-item-price">$${item.price.toFixed(2)}</p>
+                    <p class="cart-item-price">XAF${item.price.toFixed(2)}</p>
                     <div class="cart-item-quantity">
                         <button class="quantity-btn minus" data-id="${item.id}">-</button>
                         <input type="number" class="quantity-input" value="${item.quantity}" min="1" data-id="${item.id}">
@@ -414,4 +414,67 @@ menuToggle.addEventListener('click', () => {
 
     // Initialize
     displayProducts();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const testimonials = document.querySelectorAll('.testimonial');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.querySelector('.slider-prev');
+    const nextBtn = document.querySelector('.slider-next');
+    let currentIndex = 0;
+
+    function showTestimonial(index) {
+        testimonials.forEach(testimonial => {
+            testimonial.classList.remove('active');
+        });
+        dots.forEach(dot => {
+            dot.classList.remove('active');
+        });
+        
+        testimonials[index].classList.add('active');
+        dots[index].classList.add('active');
+        currentIndex = index;
+    }
+
+    prevBtn.addEventListener('click', function() {
+        let newIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
+        showTestimonial(newIndex);
+    });
+
+    nextBtn.addEventListener('click', function() {
+        let newIndex = (currentIndex + 1) % testimonials.length;
+        showTestimonial(newIndex);
+    });
+
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', function() {
+            showTestimonial(index);
+        });
+    });
+
+    // Auto-rotate every 5 seconds (optional)
+    setInterval(() => {
+        let newIndex = (currentIndex + 1) % testimonials.length;
+        showTestimonial(newIndex);
+    }, 5000);
+});
+
+// Add this to your script.js
+document.addEventListener('DOMContentLoaded', function() {
+    // Make bubbles slightly interactive on desktop
+    if (window.innerWidth > 768) {
+        const bubbles = document.querySelectorAll('.bubble');
+        
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            bubbles.forEach(bubble => {
+                const speed = parseFloat(bubble.style.getPropertyValue('--size')) / 100;
+                const moveX = (x - 0.5) * 20 * speed;
+                const moveY = (y - 0.5) * 20 * speed;
+                bubble.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            });
+        });
+    }
 });
