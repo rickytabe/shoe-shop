@@ -216,7 +216,7 @@ menuToggle.addEventListener('click', () => {
         });
         
         // Update total
-        cartTotal.textContent = `$${total.toFixed(2)}`;
+        cartTotal.textContent = `XAF ${total.toFixed(2)}`;
         
         // Add event listeners to quantity buttons
         document.querySelectorAll('.quantity-btn').forEach(button => {
