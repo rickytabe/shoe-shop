@@ -6,6 +6,7 @@
     <title>StepUp - Premium Footwear</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="https://i.pinimg.com/736x/40/3b/a6/403ba6840b946cc999e9aa29172bceb3.jpg">
 </head>
 <body>
@@ -40,69 +41,68 @@
                     <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
-            <div class="cart-icon">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="cart-count">0</span>
+            <div class="header-actions">
+                <div class="theme-toggle" id="theme-toggle" title="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </div>
             </div>
         </div>
     </header>
 
     <section class="hero" id="home">
-        <div class="container">
-            <!-- Organic Shoe Blobs -->
-            <div class="shoe-blobs">
-                <div class="blob" style="--x: 10%; --y: 20%; --size: 120px; --color: #ff6b6b40;">
-                    <img src="image1.png" alt="Imported Sneakers" class="blob-shoe" style="height: 200px; width:200px;">
-                </div>
-                <div class="blob" style="--x: 80%; --y: 30%; --size: 150px; --color: #4ecdc440;">
-                    <img src="image2.png" alt="Quality Boots" class="blob-shoe" style="height:200px; width:200px;">
-                </div>
-                <div class="blob" style="--x: 30%; --y: 70%; --size: 100px; --color: #ffd16640;">
-                    <img src="image.png" alt="Comfort Sandals" class="blob-shoe" style="height:200px; width:200px;">
-                </div>
-            </div>
-            
-            <div class="hero-content">
-                <div class="import-tag">
+        <div class="hero-inner">
+            <!-- Left Column: Content -->
+            <div class="hero-left">
+                <!-- <div class="hero-badge">
                     <i class="fas fa-globe-asia"></i>
                     <span>Direct China Imports</span>
-                </div>
-                <h1>Premium Footwear at Wholesale Prices</h1>
-                <p class="subtitle">Buea's #1 source for quality imported shoes since 2024</p>
-                
-                <div class="blob-features">
-                    <div class="feature-blob">
-                        <div class="mini-blob" style="--blob-color: #ff6b6b30;">
-                            <i class="fas fa-tag"></i>
-                        </div>
-                        <span>Best Prices</span>
-                    </div>
-                    <div class="feature-blob">
-                        <div class="mini-blob" style="--blob-color: #4ecdc430;">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <span>Quality Guaranteed</span>
-                    </div>
-                    <div class="feature-blob">
-                        <div class="mini-blob" style="--blob-color: #ffd16630;">
-                            <i class="fas fa-truck"></i>
-                        </div>
-                        <span>Fast Delivery</span>
-                    </div>
-                </div>
-                
-                <div class="hero-buttons">
-                    <a href="#products" class="btn btn-primary">
-                         Shop Now
+                </div> -->
+                <h1 class="hero-headline">Step Into <span class="hero-accent">Premium</span> Style</h1>
+                <p class="hero-subline">Buea's #1 source for quality imported shoes since 2024</p>
+                <p class="hero-desc">Discover handpicked footwear shipped directly from top manufacturers. Unmatched quality at wholesale prices — delivered right to your door in Cameroon.</p>
+                <div class="hero-ctas">
+                    <a href="#products" class="hero-btn hero-btn-primary">
+                        <i class="fas fa-shopping-bag"></i> Shop Now
                     </a>
-                    <a href="#about" class="btn btn-outline">
-                         Bulk Orders
+                    <a href="#about" class="hero-btn hero-btn-ghost">
+                        Bulk Orders <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <strong>2K+</strong>
+                        <span>Happy Customers</span>
+                    </div>
+                    <div class="hero-stat-divider"></div>
+                    <div class="hero-stat">
+                        <strong>500+</strong>
+                        <span>Shoes Delivered</span>
+                    </div>
+                    <div class="hero-stat-divider"></div>
+                    <div class="hero-stat">
+                        <strong>4.9★</strong>
+                        <span>Customer Rating</span>
+                    </div>
+                </div>
+            </div>
 
-                <div class="location-tag">
-                    <i class="fas fa-map-pin"></i>
-                    <span>Molyko, Buea, Cameroon</span>
+            <!-- Right Column: Floating Product -->
+            <div class="hero-right">
+                <div class="hero-glow"></div>
+                <div class="hero-product-stage">
+                    <img src="shoe-d.png" alt="Premium Sneaker" class="hero-shoe active" data-index="0">
+                    <img src="shoe-b.png" alt="Sport Runner" class="hero-shoe" data-index="1">
+                    <img src="shoe-c.png" alt="Training Shoe" class="hero-shoe" data-index="2">
+                </div>
+                <div class="hero-shoe-shadow"></div>
+                <div class="hero-indicators">
+                    <span class="hero-dot active" data-index="0"></span>
+                    <span class="hero-dot" data-index="1"></span>
+                    <span class="hero-dot" data-index="2"></span>
                 </div>
             </div>
         </div>
@@ -275,36 +275,58 @@
         <div class="container">
             <h2>Contact Us</h2>
             <div class="contact-container">
-                <form id="contact-form">
-                    <div class="form-group">
-                        <input type="text" placeholder="Your Name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" placeholder="Your Email" required>
-                    </div>
-                    <div class="form-group">
-                        <textarea placeholder="Your Message" required></textarea>
-                    </div>
-                    <button type="submit" class="btn">Send Message</button>
-                </form>
+                <div class="contact-form-wrapper" id="contact-form">
+                    <h3>Send us a message</h3>
+                    <p class="contact-subtitle">We'd love to hear from you. Fill out the form below.</p>
+                    <form>
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" placeholder="john@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Your Message</label>
+                            <textarea id="message" placeholder="How can we help you?" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-full">Send Message <i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
                 <div class="contact-info">
-                    <div class="info-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <p>Molyko, Malingo City</p>
+                    <h3>Contact Information</h3>
+                    <p class="contact-subtitle">Reach out directly or visit our store.</p>
+                    <div class="info-items">
+                        <div class="info-item">
+                            <div class="icon-box"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="info-text">
+                                <h4>Our Location</h4>
+                                <p>Molyko, Malingo City<br>Buea, Cameroon</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="icon-box"><i class="fas fa-phone-alt"></i></div>
+                            <div class="info-text">
+                                <h4>Phone Number</h4>
+                                <p>(237) 671353341</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="icon-box"><i class="fas fa-envelope"></i></div>
+                            <div class="info-text">
+                                <h4>Email Address</h4>
+                                <p>rickytabe2@gmail.com</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="info-item">
-                        <i class="fas fa-phone"></i>
-                        <p>(237) 671353341</p>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-envelope"></i>
-                        <p>rickytabe2@gmail.com</p>
-                    </div>
-                    <div class="social-icons">
-                        <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
-                        <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
-                        <a href="https://pinterest.com" target="_blank"><i class="fab fa-pinterest"></i></a>
+                    <div class="social-box">
+                        <h4>Follow Us</h4>
+                        <div class="social-icons">
+                            <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+                            <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -336,7 +358,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2023 StepUp. All Rights Reserved.</p>
+                <p>&copy; 2026 StepUp. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
@@ -355,6 +377,88 @@
         </div>
     </div>
 
+    <div class="payment-modal">
+        <div class="payment-content">
+            <span class="close-payment">&times;</span>
+            <h2>Mobile Money Payment</h2>
+            <p class="payment-note">Choose a payment method and complete checkout.</p>
+
+            <div class="payment-method-options">
+                <label class="payment-method-card active" for="method-mtn">
+                    <input type="radio" name="payment-method" id="method-mtn" value="MTN MoMo" checked>
+                    <div class="payment-logo mtn-logo">
+                        <img src="https://i.pinimg.com/1200x/7b/9f/ce/7b9fce7a65a393b17d61f4061f7e7375.jpg" alt="MTN MoMo logo">
+                    </div>
+                    <span class="method-name">MTN MoMo</span>
+                </label>
+
+                <label class="payment-method-card" for="method-orange">
+                    <input type="radio" name="payment-method" id="method-orange" value="Orange Money">
+                    <div class="payment-logo orange-logo">
+                        <img src="https://i.pinimg.com/736x/d4/0a/ae/d40aaed93de5fb669b845167963c6d9f.jpg" alt="Orange Money logo">
+                    </div>
+                    <span class="method-name">Orange Money</span>
+                </label>
+            </div>
+
+            <form class="payment-form">
+                <div class="form-group">
+                    <input type="tel" id="payment-phone" placeholder="Phone number (e.g. 6XXXXXXXX)" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="payment-address" placeholder="Delivery address (e.g. Molyko, Behind UB Junction, Buea)" required>
+                </div>
+                <div>
+                    <h4>Items Summary</h4>
+                    <div class="payment-items">
+                    
+                        <!-- Payment summary items are rendered here -->
+                    </div>
+                </div>
+                <div class="payment-amount">
+                    <span>Amount</span>
+                    <strong id="payment-amount">XAF 0.00</strong>
+                </div>
+                <button type="submit" class="btn pay-now-btn">Pay Now</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="success-overlay" id="success-overlay">
+        <canvas id="confetti-canvas"></canvas>
+        <div class="success-content">
+            <div class="success-checkmark">
+                <div class="check-circle">
+                    <svg class="checkmark-svg" viewBox="0 0 52 52">
+                        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                </div>
+            </div>
+            <h2 class="success-title">Payment Successful!</h2>
+            <p class="success-message">Your order is confirmed and being prepared for delivery.</p>
+            <div class="success-details">
+                <div class="success-detail-row">
+                    <i class="fas fa-receipt"></i>
+                    <span id="success-reference">Ref: STP-000000</span>
+                </div>
+                <div class="success-detail-row">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span id="success-address">Delivery address</span>
+                </div>
+            </div>
+            <div class="success-actions">
+                <button class="btn success-download-btn" id="success-download-btn">
+                    <i class="fas fa-download"></i> Download Receipt
+                </button>
+                <button class="btn success-close-btn" id="success-close-btn">
+                    <i class="fas fa-shopping-bag"></i> Continue Shopping
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
