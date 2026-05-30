@@ -402,10 +402,10 @@
   },
   "reviews": {
     "overallRating": 4.8,
-    "verifiedReviewCount": 40,
+    "verifiedReviewCount": 6,
     "ratingBreakdown": [
-      { "stars": 5, "count": 34 },
-      { "stars": 4, "count": 6 },
+      { "stars": 5, "count": 5 },
+      { "stars": 4, "count": 1 },
       { "stars": 3, "count": 0 },
       { "stars": 2, "count": 0 },
       { "stars": 1, "count": 0 }

@@ -311,9 +311,23 @@
                     item.imageUrl = matched.image;
                 }
             }
+
+            // Detect if this is a review card
+            const isReview = !!(item.rating || item.reviewer || item.review || item.location);
             
             // If item has an id (matched or from AI), it's a product that can be added to cart
-            const isProduct = !!(item.id && (item.priceXaf || (matched && matched.price)));
+            const isProduct = !isReview && !!(item.id && (item.priceXaf || (matched && matched.price)));
+
+            const imageSource = item.imageUrl || item.imagePath || item.path;
+            const hasImage = !!imageSource;
+
+            // Apply layout classes
+            if (isReview) {
+                card.classList.add('is-review');
+            } else if (!hasImage) {
+                card.classList.add('no-image');
+            }
+
             if (isProduct) {
                 card.classList.add('is-product');
                 card.dataset.productId = item.id;
@@ -321,49 +335,84 @@
                 card.addEventListener('click', () => addProductToCart(item));
             }
 
-            const imageSource = item.imageUrl || item.imagePath || item.path;
-            if (imageSource) {
+            // Image (only for non-review cards with images)
+            if (hasImage && !isReview) {
                 const image = document.createElement('img');
                 image.src = imageSource;
                 image.alt = item.imageAlt || item.name || item.title || 'StepUp image';
                 image.loading = 'lazy';
-                image.addEventListener('error', () => image.remove());
+                image.addEventListener('error', () => {
+                    image.remove();
+                    card.classList.add('no-image');
+                });
                 card.appendChild(image);
             }
 
             const content = document.createElement('div');
-            const title = document.createElement('strong');
-            title.textContent = item.name || item.title || 'StepUp item';
-            content.appendChild(title);
 
-            const meta = document.createElement('span');
-            meta.textContent = item.priceXaf
-                ? `${formatXaf(item.priceXaf)}${item.category ? ` - ${titleCase(item.category)}` : ''}`
-                : (item.category || item.purpose || '');
-            if (meta.textContent) content.appendChild(meta);
+            // Review card: show stars + reviewer name + review text + location
+            if (isReview) {
+                // Star rating
+                if (item.rating) {
+                    const stars = document.createElement('div');
+                    stars.className = 'review-stars';
+                    const fullStars = Math.floor(Number(item.rating));
+                    const hasHalf = Number(item.rating) % 1 >= 0.5;
+                    stars.innerHTML = '★'.repeat(fullStars) + (hasHalf ? '½' : '') + '☆'.repeat(5 - fullStars - (hasHalf ? 1 : 0));
+                    content.appendChild(stars);
+                }
 
-            if (item.description) {
-                const description = document.createElement('p');
-                description.textContent = item.description;
-                content.appendChild(description);
-            }
-            
-            // Add "Add to Cart" button for products
-            if (isProduct) {
-                const addBtn = document.createElement('button');
-                addBtn.className = 'ai-chat-add-to-cart';
-                addBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
-                addBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    addProductToCart(item);
-                    addBtn.textContent = '✓ Added!';
-                    addBtn.style.background = '#00c853';
-                    setTimeout(() => {
-                        addBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
-                        addBtn.style.background = '';
-                    }, 1500);
-                });
-                content.appendChild(addBtn);
+                const title = document.createElement('strong');
+                title.textContent = item.reviewer || item.name || item.title || 'Customer';
+                content.appendChild(title);
+
+                if (item.review || item.description) {
+                    const desc = document.createElement('p');
+                    desc.textContent = item.review || item.description;
+                    content.appendChild(desc);
+                }
+
+                if (item.location || item.category) {
+                    const loc = document.createElement('span');
+                    loc.className = 'review-location';
+                    loc.textContent = '📍 ' + (item.location || item.category);
+                    content.appendChild(loc);
+                }
+            } else {
+                // Product / generic card
+                const title = document.createElement('strong');
+                title.textContent = item.name || item.title || 'StepUp item';
+                content.appendChild(title);
+
+                const meta = document.createElement('span');
+                meta.textContent = item.priceXaf
+                    ? `${formatXaf(item.priceXaf)}${item.category ? ` - ${titleCase(item.category)}` : ''}`
+                    : (item.category || item.purpose || '');
+                if (meta.textContent) content.appendChild(meta);
+
+                if (item.description) {
+                    const description = document.createElement('p');
+                    description.textContent = item.description;
+                    content.appendChild(description);
+                }
+                
+                // Add "Add to Cart" button for products
+                if (isProduct) {
+                    const addBtn = document.createElement('button');
+                    addBtn.className = 'ai-chat-add-to-cart';
+                    addBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+                    addBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        addProductToCart(item);
+                        addBtn.textContent = '✓ Added!';
+                        addBtn.style.background = '#00c853';
+                        setTimeout(() => {
+                            addBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+                            addBtn.style.background = '';
+                        }, 1500);
+                    });
+                    content.appendChild(addBtn);
+                }
             }
 
             card.appendChild(content);
@@ -474,10 +523,11 @@
         if (matchesAny(query, ['review', 'testimonial', 'rating', 'trusted'])) {
             return {
                 answer: `StepUp lists an overall rating of ${store.reviews.overallRating}/5 based on ${store.reviews.verifiedReviewCount} verified reviews. The testimonial section includes buyers from Buea, Douala, Limbe, Toronto, Sydney, and Yaounde.`,
-                items: store.reviews.testimonials.slice(0, 3).map(review => ({
-                    title: review.reviewer,
-                    category: review.location,
-                    description: `${review.rating}/5 - ${review.review}`
+                items: store.reviews.testimonials.slice(0, 3).map(r => ({
+                    reviewer: r.reviewer,
+                    rating: r.rating,
+                    review: r.review,
+                    location: r.location
                 })),
                 suggestions: ['Show me sneakers', 'Who founded StepUp?', 'What is the return policy?']
             };
