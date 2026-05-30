@@ -351,6 +351,13 @@
                     </ul>
                 </div>
                 <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="terms.html">Terms & Conditions</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
                     <h3>Newsletter</h3>
                     <form class="newsletter-form">
                         <input type="email" placeholder="Your Email">
@@ -459,7 +466,57 @@
         </div>
     </div>
 
+    <!-- Cookie Consent Popup -->
+    <div class="cookie-consent" id="cookieConsent">
+        <div class="cookie-content">
+            <div class="cookie-text">
+                <h3>🍪 Cookie Consent</h3>
+                <p>We use cookies to enhance your experience, analyze site traffic, and serve personalized content. By accepting, you consent to our <a href="privacy.html">Privacy Policy</a> and <a href="terms.html">Terms & Conditions</a>.</p>
+            </div>
+            <div class="cookie-actions">
+                <button class="cookie-btn cookie-reject" id="cookieReject">Reject</button>
+                <button class="cookie-btn cookie-accept" id="cookieAccept">Accept</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
+    <script>
+        // Cookie Consent Management
+        function initCookieConsent() {
+            const cookieConsent = document.getElementById('cookieConsent');
+            const cookieAccept = document.getElementById('cookieAccept');
+            const cookieReject = document.getElementById('cookieReject');
+
+            // Check if user has already made a choice
+            if (!localStorage.getItem('cookieConsent')) {
+                cookieConsent.style.display = 'block';
+            }
+
+            cookieAccept.addEventListener('click', () => {
+                localStorage.setItem('cookieConsent', 'accepted');
+                cookieConsent.classList.add('hide');
+                setTimeout(() => {
+                    cookieConsent.style.display = 'none';
+                }, 300);
+            });
+
+            cookieReject.addEventListener('click', () => {
+                localStorage.setItem('cookieConsent', 'rejected');
+                cookieConsent.classList.add('hide');
+                setTimeout(() => {
+                    cookieConsent.style.display = 'none';
+                }, 300);
+            });
+        }
+
+        // Initialize cookie consent when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCookieConsent);
+        } else {
+            initCookieConsent();
+        }
+    </script>
 </body>
 </html>
