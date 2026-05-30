@@ -2,6 +2,9 @@
     'use strict';
 
     const STORE_URL = 'store-data.json';
+    const GEMINI_API_KEY = 'AQ.Ab8RN6J69vAcUYkbZ-qe-eYKrSirlPTJCdIQcGSp_8xPkvNyKA';
+    const GEMINI_MODEL = 'gemini-3.1-flash-lite';
+    const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
     const DEFAULT_SUGGESTIONS = [
         'Show me sneakers under 10000 XAF',
         'What payment methods do you accept?',
@@ -202,10 +205,21 @@
     async function askStepUpAi(message, state) {
         const prompt = buildPrompt(message, state.history, state.store);
 
-        const response = await fetch('/api/chat', {
+        const response = await fetch(`${GEMINI_ENDPOINT}?key=${GEMINI_API_KEY}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt })
+            body: JSON.stringify({
+                contents: [
+                    {
+                        role: 'user',
+                        parts: [{ text: prompt }]
+                    }
+                ],
+                generationConfig: {
+                    temperature: 0.35,
+                    responseMimeType: 'application/json'
+                }
+            })
         });
 
         if (!response.ok) {
