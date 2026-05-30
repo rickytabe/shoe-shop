@@ -164,6 +164,7 @@
             'If the user asks for products, prices, categories, owner/founder images, store images, policy info, contact info, or reviews, answer from STORE_DATA.',
             'When useful, include product or asset cards in items. Each item should include id (the numeric product id from STORE_DATA), name/title, description, category when relevant, priceXaf when relevant, and imageUrl or imagePath when available.',
             'Do not invent sizes, stock levels, discounts, or delivery promises not present in STORE_DATA.',
+            'When the user asks about a specific product by name, return ONLY that exact product in items. Do not include other products unless the user explicitly asks for alternatives or similar items.',
             'For payments, mention MTN Mobile Money and Orange Money only.',
             'If information is unavailable, say so and suggest contacting StepUp.',
             'Return strict JSON only, with this shape:',
@@ -557,7 +558,46 @@
         };
     }
 
+    function findExactProduct(query, products) {
+        const q = query.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
+        const qWords = q.split(/\s+/).filter(w => w.length > 1);
+
+        // Score each product by how many of its name words appear in the query
+        const scored = products.map(product => {
+            const pName = product.name.toLowerCase().replace(/[^a-z0-9\s]/g, '');
+            const pWords = pName.split(/\s+/).filter(w => w.length > 1);
+            const matchedWords = pWords.filter(w => qWords.some(qw => qw === w || qw.includes(w) || w.includes(qw)));
+            const ratio = pWords.length > 0 ? matchedWords.length / pWords.length : 0;
+            return { product, ratio, matchedWords: matchedWords.length, totalWords: pWords.length };
+        });
+
+        // Find products where most name words match (at least 60% and at least 2 words)
+        const strong = scored.filter(s => s.ratio >= 0.6 && s.matchedWords >= 2);
+
+        if (strong.length === 0) return null;
+
+        // Sort by match ratio then by number of matched words
+        strong.sort((a, b) => b.ratio - a.ratio || b.matchedWords - a.matchedWords);
+
+        // Only return if the top match is clearly better than the rest
+        if (strong.length === 1 || strong[0].ratio > strong[1].ratio || strong[0].matchedWords > strong[1].matchedWords) {
+            return strong[0].product;
+        }
+
+        return null;
+    }
+
     function answerProducts(query, products, summary) {
+        // 1. Check for an exact or close product name match first
+        const exactMatch = findExactProduct(query, products);
+        if (exactMatch) {
+            return {
+                answer: `Here's ${exactMatch.name} — priced at ${formatXaf(exactMatch.priceXaf)} in the ${titleCase(exactMatch.category)} category.`,
+                items: [exactMatch],
+                suggestions: ['Add to cart', 'Show similar products', 'How do I pay?']
+            };
+        }
+
         const category = detectCategory(query);
         const budget = extractBudget(query);
         let matches = [];
@@ -604,6 +644,7 @@
             suggestions: ['Show cheaper options', 'Show product pictures', 'How do I pay?']
         };
     }
+
 
     function scoreProducts(query, products) {
         const words = query.split(/\s+/).filter(word => word.length > 2);
