@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
   // ============================================================
-// StepUp Shoe Shop — Updated Products Array (30 Products)
+// StepUp Shoe Shop — Updated Products Array (42 Products)
 // Replace the existing `const products = [...]` in script.js
 // with this entire block
 // ============================================================
@@ -257,6 +257,102 @@ const products = [
         category: "sandals",
         image: "https://images.unsplash.com/photo-1560072810-1cffb09faf0f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
         description: "Easy velcro fastening sandals built tough for active kids."
+    },
+    {
+        id: 31,
+        name: "Nike Air Max Casual",
+        price: 22000,
+        category: "sneakers",
+        image: "https://i.pinimg.com/1200x/a1/37/67/a137676adce11fd44f881c9f8893bd7f.jpg",
+        description: "Premium Nike Air Max with vibrant colorways and exceptional cushioning."
+    },
+    {
+        id: 32,
+        name: "Nike Dunk High Red/Black",
+        price: 25000,
+        category: "sneakers",
+        image: "https://i.pinimg.com/736x/78/a7/74/78a7745a54a0d3b5d9751e300dfc5478.jpg",
+        description: "Classic high-top Nike Dunks featuring iconic red and black blocking."
+    },
+    {
+        id: 33,
+        name: "Nike Air Max 90 Essential",
+        price: 24000,
+        category: "sneakers",
+        image: "https://i.pinimg.com/736x/e6/01/7e/e6017ebb46111d34aef356455279aab1.jpg",
+        description: "The quintessential Nike Air Max 90 with its signature visible Air unit."
+    },
+    {
+        id: 34,
+        name: "Nike Air Force 1 Premium",
+        price: 28000,
+        category: "sneakers",
+        image: "https://i.pinimg.com/736x/8c/0f/26/8c0f26aaae44d62586cf71478ed5d36f.jpg",
+        description: "Timeless Nike Air Force 1 with a premium leather finish and thick sole."
+    },
+    {
+        id: 35,
+        name: "Adidas Ultraboost Lite",
+        price: 21000,
+        category: "sports",
+        image: "https://i.pinimg.com/1200x/14/83/4b/14834b246f892f8b74ce2a42fbd6eaf9.jpg",
+        description: "High-performance running shoes with responsive Boost midsole and breathable mesh upper."
+    },
+    {
+        id: 36,
+        name: "Adidas Samba Classic",
+        price: 19000,
+        category: "sports",
+        image: "https://i.pinimg.com/736x/bc/c1/5c/bcc15caeec70346bbcc84130f4de7472.jpg",
+        description: "Iconic indoor soccer shoe turned streetwear staple with full-grain leather and suede."
+    },
+    {
+        id: 37,
+        name: "Adidas NMD R1",
+        price: 23000,
+        category: "sports",
+        image: "https://i.pinimg.com/736x/b6/7e/0a/b67e0ab612080fff7c708a3c49d417ac.jpg",
+        description: "Modern urban sneaker featuring energy-returning cushioning and a flexible knit upper."
+    },
+    {
+        id: 38,
+        name: "Adidas Stan Smith",
+        price: 17500,
+        category: "sports",
+        image: "https://i.pinimg.com/736x/30/05/d2/3005d2f9e1aba3c8464f28c565de7c63.jpg",
+        description: "Clean, minimalist tennis shoes that have defined everyday casual style for decades."
+    },
+    {
+        id: 39,
+        name: "Balenciaga Triple S",
+        price: 35000,
+        category: "sneakers",
+        image: "https://i.pinimg.com/1200x/4a/a8/6e/4aa86ef5b700609284f6a588e311b01a.jpg",
+        description: "The iconic chunky luxury sneaker that redefined streetwear with its signature oversized three-layered sole."
+    },
+    {
+        id: 40,
+        name: "Balenciaga Track Sneaker",
+        price: 38000,
+        category: "sneakers",
+        image: "https://i.pinimg.com/736x/2f/5e/cb/2f5ecbda08fa73fe0665e0d47af3c403.jpg",
+        description: "High-fashion hiking and running inspired sneaker with complex, multi-layered mesh and nylon cage construction."
+    },
+    {
+        id: 41,
+        name: "Balenciaga Speed Trainer",
+        price: 32000,
+        category: "sneakers",
+        image: "https://i.pinimg.com/736x/30/72/1c/30721cb8c940fd8030ae0969cd7192b9.jpg",
+        description: "Minimalist sock-style luxury runner featuring a comfortable 3D knit upper and an ultra-flexible ergonomic sole."
+    },
+    {
+        id: 42,
+        name: "Balenciaga Defender",
+        price: 42000,
+        category: "sneakers",
+        image: "https://i.pinimg.com/736x/fc/01/85/fc0185016c0155b59d85c2d835154efb.jpg",
+        description: "Avant-garde statement sneaker with an extreme tire-tread sole for ultimate distressed luxury."
     }
 
 ];
@@ -265,13 +361,13 @@ const products = [
 // PRICE SUMMARY (for AI system prompt reference)
 // ============================================================
 //
-// SNEAKERS:   4,500 – 14,500 XAF
+// SNEAKERS:   4,500 – 42,000 XAF
 // FORMAL:     9,000 – 17,500 XAF
-// SPORTS:    15,000 – 22,000 XAF
+// SPORTS:    15,000 – 23,000 XAF
 // SANDALS:    2,500 – 10,500 XAF
 //
 // Most affordable: Flip Flops @ 2,500 XAF
-// Most expensive:  Trail Running Shoes @ 22,000 XAF
+// Most expensive:  Balenciaga Defender @ 42,000 XAF
 // ============================================================
 
     // Shopping cart

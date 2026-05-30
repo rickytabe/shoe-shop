@@ -2,9 +2,6 @@
     'use strict';
 
     const STORE_URL = 'store-data.json';
-    const GEMINI_API_KEY = 'AQ.Ab8RN6L3VzKPU8gDlMakjqAU3_WwUTou-AEP1jKADZEDMr-g2A';
-    const GEMINI_MODEL = 'gemini-3.1-flash-lite';
-    const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
     const DEFAULT_SUGGESTIONS = [
         'Show me sneakers under 10000 XAF',
         'What payment methods do you accept?',
@@ -114,7 +111,17 @@
                 renderSuggestions(elements.suggestions, response.suggestions || DEFAULT_SUGGESTIONS);
             } catch (error) {
                 typingNode.remove();
-                const fallback = createLocalAnswer(message, state.store);
+                console.warn('StepUp AI: Gemini API failed, using local fallback.', error);
+                let fallback;
+                try {
+                    fallback = createLocalAnswer(message, state.store);
+                } catch (_) {
+                    fallback = {
+                        answer: 'I\'m having trouble connecting right now. Please try again in a moment, or browse our products directly on the page!',
+                        items: [],
+                        suggestions: DEFAULT_SUGGESTIONS
+                    };
+                }
                 appendMessage(elements.messages, 'assistant', fallback);
                 state.history.push({ role: 'assistant', content: fallback.answer });
                 renderSuggestions(elements.suggestions, fallback.suggestions || DEFAULT_SUGGESTIONS);
@@ -160,15 +167,22 @@
 
         return [
             'You are the StepUp AI shopping assistant for a shoe shop in Buea, Cameroon.',
-            'Use only the provided STORE_DATA unless the user asks for general shoe-care advice.',
-            'If the user asks for products, prices, categories, owner/founder images, store images, policy info, contact info, or reviews, answer from STORE_DATA.',
-            'When useful, include product or asset cards in items. Each item should include id (the numeric product id from STORE_DATA), name/title, description, category when relevant, priceXaf when relevant, and imageUrl or imagePath when available.',
-            'Do not invent sizes, stock levels, discounts, or delivery promises not present in STORE_DATA.',
-            'When the user asks about a specific product by name, return ONLY that exact product in items. Do not include other products unless the user explicitly asks for alternatives or similar items.',
-            'For payments, mention MTN Mobile Money and Orange Money only.',
-            'If information is unavailable, say so and suggest contacting StepUp.',
-            'Return strict JSON only, with this shape:',
-            '{"answer":"string","items":[{"id":0,"name":"string","title":"string","category":"string","priceXaf":0,"description":"string","imageUrl":"string","imagePath":"string"}],"suggestions":["string"]}',
+            'Answer ONLY from STORE_DATA unless the user asks general shoe-care advice.',
+            '',
+            'RULES:',
+            '1. SPECIFIC PRODUCT: If the user mentions a product by name (e.g. "Neon Sport Sneakers"), return ONLY that one product in items. Do NOT add others.',
+            '2. SUPERLATIVES: If the user asks for "the cheapest" or "the most expensive" (singular), return exactly 1 product. If they say "cheap shoes" or "affordable options" (plural), return up to 4.',
+            '3. CATEGORIES: If the user asks about a category (sneakers, formal, sports, sandals), show products from that category only.',
+            '4. NON-PRODUCT QUESTIONS: If the user asks about policies, delivery, payments, returns, contact, reviews, founder, location, or the website — answer with text ONLY. Do NOT include product cards in items unless specifically asked.',
+            '5. REVIEWS: When returning reviews, use these fields in items: { "reviewer": "Name", "rating": 5, "review": "Review text", "location": "City" }. Do NOT use name/title/description for reviews.',
+            '6. POLICIES: Give a complete summary covering shipping, returns, and payments when asked about policies/rules/terms.',
+            '7. Do not invent sizes, stock levels, discounts, or delivery promises not in STORE_DATA.',
+            '8. For payments, mention MTN Mobile Money and Orange Money only.',
+            '9. If info is unavailable, say so and suggest contacting StepUp.',
+            '10. if you are asked about the founder always return the image as well, this applies to all questions about the founder, do not return the founder information without the image. also for other questions about the store that might require an image, always check if there is an image in the store data and return it if available.',
+            '',
+            'Return strict JSON only:',
+            '{"answer":"string","items":[{"id":0,"name":"string","category":"string","priceXaf":0,"description":"string","imageUrl":"string","reviewer":"string","rating":0,"review":"string","location":"string"}],"suggestions":["string"]}',
             '',
             `CHAT_HISTORY: ${JSON.stringify(trimmedHistory)}`,
             `USER_MESSAGE: ${message}`,
@@ -188,21 +202,10 @@
     async function askStepUpAi(message, state) {
         const prompt = buildPrompt(message, state.history, state.store);
 
-        const response = await fetch(`${GEMINI_ENDPOINT}?key=${GEMINI_API_KEY}`, {
+        const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [
-                    {
-                        role: 'user',
-                        parts: [{ text: prompt }]
-                    }
-                ],
-                generationConfig: {
-                    temperature: 0.35,
-                    responseMimeType: 'application/json'
-                }
-            })
+            body: JSON.stringify({ prompt })
         });
 
         if (!response.ok) {
@@ -449,240 +452,12 @@
         container.scrollTop = container.scrollHeight;
     }
 
-    function createLocalAnswer(message, store) {
-        if (!store) {
-            return {
-                answer: 'I could not load the StepUp data store yet. Please run the site through a local server or deploy it, then try again.',
-                items: [],
-                suggestions: DEFAULT_SUGGESTIONS
-            };
-        }
-
-        const query = normalizeText(message);
-        const products = store.products || [];
-
-        if (matchesAny(query, ['contact', 'phone', 'email', 'call', 'location', 'located', 'address', 'where are you'])) {
-            return {
-                answer: `StepUp is located at ${store.business.location.full}. You can call ${store.business.contact.phone} or email ${store.business.contact.email}.`,
-                items: [],
-                suggestions: ['Show me products', 'What payment methods do you accept?', 'How does delivery work?']
-            };
-        }
-
-        if (matchesAny(query, ['owner', 'founder', 'charles', 'photo', 'picture', 'image']) && matchesAny(query, ['owner', 'founder', 'charles'])) {
-            return {
-                answer: `${store.business.founder.name} is the founder of StepUp. Here is the founder image available in the data store.`,
-                items: [
-                    {
-                        title: store.business.founder.name,
-                        description: store.about.originStory,
-                        imageUrl: store.business.founder.imageUrl
-                    }
-                ],
-                suggestions: ['Tell me about StepUp', 'Show store photo', 'Show testimonials']
-            };
-        }
-
-        if (matchesAny(query, ['store photo', 'shop photo', 'store image', 'shop image'])) {
-            return {
-                answer: 'Here is the StepUp store image available in the data store.',
-                items: [
-                    {
-                        title: 'StepUp store in Buea',
-                        description: store.business.location.full,
-                        imageUrl: store.about.images.storePhoto
-                    }
-                ],
-                suggestions: ['Where is StepUp located?', 'Who founded StepUp?', 'Show me products']
-            };
-        }
-
-        if (matchesAny(query, ['payment', 'pay', 'mtn', 'momo', 'orange money', 'checkout'])) {
-            return {
-                answer: `StepUp accepts ${store.policies.payments.acceptedMethods.join(' and ')}. During checkout, customers enter a phone number and delivery address, then receive a success confirmation and PDF receipt.`,
-                items: [],
-                suggestions: ['How does delivery work?', 'What is the return policy?', 'Show affordable shoes']
-            };
-        }
-
-        if (matchesAny(query, ['delivery', 'shipping', 'deliver', 'ship'])) {
-            return {
-                answer: `StepUp offers ${store.policies.shipping.summary} Delivery is listed as ${store.policies.shipping.bueaArea} around Buea and ${store.policies.shipping.otherRegions} for other regions.`,
-                items: [],
-                suggestions: ['What payment methods do you accept?', 'Where is StepUp located?', 'Show sandals']
-            };
-        }
-
-        if (matchesAny(query, ['return', 'refund', 'exchange'])) {
-            return {
-                answer: `${store.policies.returns.summary} Shoes should be unworn and returned with original packaging. Refunds are listed as ${store.policies.returns.refundTiming}.`,
-                items: [],
-                suggestions: ['Show formal shoes', 'How does delivery work?', 'Contact StepUp']
-            };
-        }
-
-        if (matchesAny(query, ['review', 'testimonial', 'rating', 'trusted'])) {
-            return {
-                answer: `StepUp lists an overall rating of ${store.reviews.overallRating}/5 based on ${store.reviews.verifiedReviewCount} verified reviews. The testimonial section includes buyers from Buea, Douala, Limbe, Toronto, Sydney, and Yaounde.`,
-                items: store.reviews.testimonials.slice(0, 3).map(r => ({
-                    reviewer: r.reviewer,
-                    rating: r.rating,
-                    review: r.review,
-                    location: r.location
-                })),
-                suggestions: ['Show me sneakers', 'Who founded StepUp?', 'What is the return policy?']
-            };
-        }
-
-        if (matchesAny(query, ['about', 'mission', 'vision', 'story'])) {
-            return {
-                answer: `${store.about.originStory} Mission: ${store.about.mission} Vision: ${store.about.vision}`,
-                items: [
-                    {
-                        title: store.business.founder.name,
-                        description: 'Founder of StepUp',
-                        imageUrl: store.about.images.founderPhoto
-                    }
-                ],
-                suggestions: ['Show owner photo', 'Where is StepUp located?', 'Show products']
-            };
-        }
-
-        const productAnswer = answerProducts(query, products, store.catalogSummary);
-        if (productAnswer) return productAnswer;
-
+    function createLocalAnswer() {
         return {
-            answer: `I can help with StepUp products, prices, images, delivery, payments, returns, reviews, contact info, and founder details. StepUp currently has ${store.catalogSummary.totalProducts} products across Sneakers, Formal, Sports, and Sandals.`,
-            items: cheapestProducts(products, 3),
+            answer: 'I\'m currently offline or having trouble connecting to my AI servers. Please check your internet connection and try again!',
+            items: [],
             suggestions: DEFAULT_SUGGESTIONS
         };
-    }
-
-    function findExactProduct(query, products) {
-        const q = query.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
-        const qWords = q.split(/\s+/).filter(w => w.length > 1);
-
-        // Score each product by how many of its name words appear in the query
-        const scored = products.map(product => {
-            const pName = product.name.toLowerCase().replace(/[^a-z0-9\s]/g, '');
-            const pWords = pName.split(/\s+/).filter(w => w.length > 1);
-            const matchedWords = pWords.filter(w => qWords.some(qw => qw === w || qw.includes(w) || w.includes(qw)));
-            const ratio = pWords.length > 0 ? matchedWords.length / pWords.length : 0;
-            return { product, ratio, matchedWords: matchedWords.length, totalWords: pWords.length };
-        });
-
-        // Find products where most name words match (at least 60% and at least 2 words)
-        const strong = scored.filter(s => s.ratio >= 0.6 && s.matchedWords >= 2);
-
-        if (strong.length === 0) return null;
-
-        // Sort by match ratio then by number of matched words
-        strong.sort((a, b) => b.ratio - a.ratio || b.matchedWords - a.matchedWords);
-
-        // Only return if the top match is clearly better than the rest
-        if (strong.length === 1 || strong[0].ratio > strong[1].ratio || strong[0].matchedWords > strong[1].matchedWords) {
-            return strong[0].product;
-        }
-
-        return null;
-    }
-
-    function answerProducts(query, products, summary) {
-        // 1. Check for an exact or close product name match first
-        const exactMatch = findExactProduct(query, products);
-        if (exactMatch) {
-            return {
-                answer: `Here's ${exactMatch.name} — priced at ${formatXaf(exactMatch.priceXaf)} in the ${titleCase(exactMatch.category)} category.`,
-                items: [exactMatch],
-                suggestions: ['Add to cart', 'Show similar products', 'How do I pay?']
-            };
-        }
-
-        const category = detectCategory(query);
-        const budget = extractBudget(query);
-        let matches = [];
-        let answer = '';
-
-        if (matchesAny(query, ['all products', 'catalog', 'everything', 'all shoes'])) {
-            matches = products.slice(0, 6);
-            answer = `StepUp has ${summary.totalProducts} products. I am showing a sample from the catalog.`;
-        } else if (matchesAny(query, ['cheap', 'affordable', 'lowest', 'least expensive', 'budget'])) {
-            matches = cheapestProducts(category ? products.filter(product => product.category === category) : products, 4);
-            answer = category
-                ? `Here are affordable ${titleCase(category)} options.`
-                : 'Here are some of the most affordable StepUp products.';
-        } else if (matchesAny(query, ['expensive', 'highest', 'premium', 'most expensive'])) {
-            matches = [...(category ? products.filter(product => product.category === category) : products)]
-                .sort((a, b) => b.priceXaf - a.priceXaf)
-                .slice(0, 4);
-            answer = category
-                ? `Here are premium ${titleCase(category)} options.`
-                : 'Here are the highest-priced products in the StepUp catalog.';
-        } else if (category) {
-            matches = products.filter(product => product.category === category);
-            answer = `StepUp has ${matches.length} ${titleCase(category)} products.`;
-        } else {
-            matches = scoreProducts(query, products).slice(0, 4);
-            if (matches.length) {
-                answer = 'I found these matching StepUp products.';
-            }
-        }
-
-        if (budget) {
-            const base = matches.length ? matches : (category ? products.filter(product => product.category === category) : products);
-            matches = base.filter(product => product.priceXaf <= budget).sort((a, b) => a.priceXaf - b.priceXaf).slice(0, 6);
-            answer = category
-                ? `Here are ${titleCase(category)} products at or under ${formatXaf(budget)}.`
-                : `Here are StepUp products at or under ${formatXaf(budget)}.`;
-        }
-
-        if (!matches.length) return null;
-
-        return {
-            answer,
-            items: matches.slice(0, 6),
-            suggestions: ['Show cheaper options', 'Show product pictures', 'How do I pay?']
-        };
-    }
-
-
-    function scoreProducts(query, products) {
-        const words = query.split(/\s+/).filter(word => word.length > 2);
-        return products
-            .map(product => {
-                const haystack = normalizeText(`${product.name} ${product.categoryLabel} ${product.description}`);
-                const score = words.reduce((total, word) => total + (haystack.includes(word) ? 1 : 0), 0);
-                return { product, score };
-            })
-            .filter(entry => entry.score > 0)
-            .sort((a, b) => b.score - a.score || a.product.priceXaf - b.product.priceXaf)
-            .map(entry => entry.product);
-    }
-
-    function cheapestProducts(products, count) {
-        return [...products].sort((a, b) => a.priceXaf - b.priceXaf).slice(0, count);
-    }
-
-    function detectCategory(query) {
-        if (matchesAny(query, ['sneaker', 'sneakers'])) return 'sneakers';
-        if (matchesAny(query, ['formal', 'office', 'work', 'oxford', 'loafers', 'loafers'])) return 'formal';
-        if (matchesAny(query, ['sport', 'sports', 'running', 'gym', 'football', 'hiking', 'tennis', 'cycling'])) return 'sports';
-        if (matchesAny(query, ['sandal', 'sandals', 'slides', 'flip flop', 'flip flops'])) return 'sandals';
-        return null;
-    }
-
-    function extractBudget(query) {
-        const match = query.match(/(?:under|below|less than|max|maximum|budget|<=?)\s*(?:xaf\s*)?([0-9][0-9,]*)/i)
-            || query.match(/([0-9][0-9,]*)\s*(?:xaf|francs?)/i);
-        return match ? Number(match[1].replace(/,/g, '')) : null;
-    }
-
-    function matchesAny(query, terms) {
-        return terms.some(term => query.includes(normalizeText(term)));
-    }
-
-    function normalizeText(value) {
-        return String(value || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
     }
 
     function titleCase(value) {

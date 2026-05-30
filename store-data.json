@@ -370,18 +370,138 @@
       "description": "Easy velcro fastening sandals built tough for active kids.",
       "imageUrl": "https://images.unsplash.com/photo-1560072810-1cffb09faf0f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
       "imageAlt": "Kids velcro sandals"
+    },
+    {
+      "id": 31,
+      "name": "Nike Air Max Casual",
+      "category": "sneakers",
+      "categoryLabel": "Sneakers",
+      "priceXaf": 22000,
+      "description": "Premium Nike Air Max with vibrant colorways and exceptional cushioning.",
+      "imageUrl": "https://i.pinimg.com/1200x/a1/37/67/a137676adce11fd44f881c9f8893bd7f.jpg",
+      "imageAlt": "Nike Air Max Casual"
+    },
+    {
+      "id": 32,
+      "name": "Nike Dunk High Red/Black",
+      "category": "sneakers",
+      "categoryLabel": "Sneakers",
+      "priceXaf": 25000,
+      "description": "Classic high-top Nike Dunks featuring iconic red and black blocking.",
+      "imageUrl": "https://i.pinimg.com/736x/78/a7/74/78a7745a54a0d3b5d9751e300dfc5478.jpg",
+      "imageAlt": "Nike Dunk High Red/Black"
+    },
+    {
+      "id": 33,
+      "name": "Nike Air Max 90 Essential",
+      "category": "sneakers",
+      "categoryLabel": "Sneakers",
+      "priceXaf": 24000,
+      "description": "The quintessential Nike Air Max 90 with its signature visible Air unit.",
+      "imageUrl": "https://i.pinimg.com/736x/e6/01/7e/e6017ebb46111d34aef356455279aab1.jpg",
+      "imageAlt": "Nike Air Max 90 Essential"
+    },
+    {
+      "id": 34,
+      "name": "Nike Air Force 1 Premium",
+      "category": "sneakers",
+      "categoryLabel": "Sneakers",
+      "priceXaf": 28000,
+      "description": "Timeless Nike Air Force 1 with a premium leather finish and thick sole.",
+      "imageUrl": "https://i.pinimg.com/736x/8c/0f/26/8c0f26aaae44d62586cf71478ed5d36f.jpg",
+      "imageAlt": "Nike Air Force 1 Premium"
+    },
+    {
+      "id": 35,
+      "name": "Adidas Ultraboost Lite",
+      "category": "sports",
+      "categoryLabel": "Sports",
+      "priceXaf": 21000,
+      "description": "High-performance running shoes with responsive Boost midsole and breathable mesh upper.",
+      "imageUrl": "https://i.pinimg.com/1200x/14/83/4b/14834b246f892f8b74ce2a42fbd6eaf9.jpg",
+      "imageAlt": "Adidas Ultraboost Lite"
+    },
+    {
+      "id": 36,
+      "name": "Adidas Samba Classic",
+      "category": "sports",
+      "categoryLabel": "Sports",
+      "priceXaf": 19000,
+      "description": "Iconic indoor soccer shoe turned streetwear staple with full-grain leather and suede.",
+      "imageUrl": "https://i.pinimg.com/736x/bc/c1/5c/bcc15caeec70346bbcc84130f4de7472.jpg",
+      "imageAlt": "Adidas Samba Classic"
+    },
+    {
+      "id": 37,
+      "name": "Adidas NMD R1",
+      "category": "sports",
+      "categoryLabel": "Sports",
+      "priceXaf": 23000,
+      "description": "Modern urban sneaker featuring energy-returning cushioning and a flexible knit upper.",
+      "imageUrl": "https://i.pinimg.com/736x/b6/7e/0a/b67e0ab612080fff7c708a3c49d417ac.jpg",
+      "imageAlt": "Adidas NMD R1"
+    },
+    {
+      "id": 38,
+      "name": "Adidas Stan Smith",
+      "category": "sports",
+      "categoryLabel": "Sports",
+      "priceXaf": 17500,
+      "description": "Clean, minimalist tennis shoes that have defined everyday casual style for decades.",
+      "imageUrl": "https://i.pinimg.com/736x/30/05/d2/3005d2f9e1aba3c8464f28c565de7c63.jpg",
+      "imageAlt": "Adidas Stan Smith"
+    },
+    {
+      "id": 39,
+      "name": "Balenciaga Triple S",
+      "category": "sneakers",
+      "categoryLabel": "Sneakers",
+      "priceXaf": 35000,
+      "description": "The iconic chunky luxury sneaker that redefined streetwear with its signature oversized three-layered sole.",
+      "imageUrl": "https://i.pinimg.com/1200x/4a/a8/6e/4aa86ef5b700609284f6a588e311b01a.jpg",
+      "imageAlt": "Balenciaga Triple S"
+    },
+    {
+      "id": 40,
+      "name": "Balenciaga Track Sneaker",
+      "category": "sneakers",
+      "categoryLabel": "Sneakers",
+      "priceXaf": 38000,
+      "description": "High-fashion hiking and running inspired sneaker with complex, multi-layered mesh and nylon cage construction.",
+      "imageUrl": "https://i.pinimg.com/736x/2f/5e/cb/2f5ecbda08fa73fe0665e0d47af3c403.jpg",
+      "imageAlt": "Balenciaga Track Sneaker"
+    },
+    {
+      "id": 41,
+      "name": "Balenciaga Speed Trainer",
+      "category": "sneakers",
+      "categoryLabel": "Sneakers",
+      "priceXaf": 32000,
+      "description": "Minimalist sock-style luxury runner featuring a comfortable 3D knit upper and an ultra-flexible ergonomic sole.",
+      "imageUrl": "https://i.pinimg.com/736x/30/72/1c/30721cb8c940fd8030ae0969cd7192b9.jpg",
+      "imageAlt": "Balenciaga Speed Trainer"
+    },
+    {
+      "id": 42,
+      "name": "Balenciaga Defender",
+      "category": "sneakers",
+      "categoryLabel": "Sneakers",
+      "priceXaf": 42000,
+      "description": "Avant-garde statement sneaker with an extreme tire-tread sole for ultimate distressed luxury.",
+      "imageUrl": "https://i.pinimg.com/736x/fc/01/85/fc0185016c0155b59d85c2d835154efb.jpg",
+      "imageAlt": "Balenciaga Defender"
     }
   ],
   "catalogSummary": {
-    "totalProducts": 30,
+    "totalProducts": 42,
     "categories": [
-      { "key": "sneakers", "label": "Sneakers", "count": 8, "priceRangeXaf": { "min": 4500, "max": 14500 } },
+      { "key": "sneakers", "label": "Sneakers", "count": 16, "priceRangeXaf": { "min": 4500, "max": 42000 } },
       { "key": "formal", "label": "Formal", "count": 7, "priceRangeXaf": { "min": 9000, "max": 17500 } },
-      { "key": "sports", "label": "Sports", "count": 7, "priceRangeXaf": { "min": 15000, "max": 22000 } },
+      { "key": "sports", "label": "Sports", "count": 11, "priceRangeXaf": { "min": 15000, "max": 23000 } },
       { "key": "sandals", "label": "Sandals", "count": 8, "priceRangeXaf": { "min": 2500, "max": 10500 } }
     ],
     "mostAffordableProductId": 8,
-    "mostExpensiveProductId": 20,
+    "mostExpensiveProductId": 42,
     "filters": ["All", "Sneakers", "Formal", "Sports", "Sandals"]
   },
   "about": {
