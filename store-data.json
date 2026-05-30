@@ -1,0 +1,544 @@
+{
+  "schemaVersion": "1.0.0",
+  "source": {
+    "rawFile": "data.md",
+    "site": "https://shoe-shop-ten.vercel.app/",
+    "lastScraped": "2026-05-30 12:57 WAT",
+    "pages": ["index.html", "terms.html", "privacy.html"],
+    "notes": [
+      "Sanitized from scraped Markdown for AI use.",
+      "All prices are in XAF, Central African CFA francs.",
+      "Some review and business stats are demo/site copy; do not present them as independently audited facts."
+    ]
+  },
+  "business": {
+    "name": "StepUp",
+    "tagline": "Premium Footwear",
+    "founded": 2024,
+    "founder": {
+      "name": "Mr Charles Tabe",
+      "title": "Founder",
+      "imageUrl": "https://i.pinimg.com/736x/91/7c/2e/917c2ec0361d36a1331bdd5bbe785e84.jpg",
+      "localImagePath": null
+    },
+    "location": {
+      "full": "Molyko, Malingo City, Buea, Cameroon",
+      "city": "Buea",
+      "region": "Southwest Region",
+      "country": "Cameroon"
+    },
+    "contact": {
+      "phone": "(237) 671353341",
+      "email": "rickytabe2@gmail.com",
+      "socialLinks": ["Facebook", "Twitter", "Instagram"]
+    },
+    "currency": {
+      "code": "XAF",
+      "name": "Central African CFA franc",
+      "displayFormat": "XAF {amount}"
+    },
+    "paymentMethods": ["MTN Mobile Money", "Orange Money"],
+    "techStack": [
+      "Static HTML",
+      "CSS",
+      "JavaScript",
+      "Vercel hosting",
+      "Font Awesome",
+      "Google Fonts Inter",
+      "jsPDF for receipts"
+    ]
+  },
+  "homepage": {
+    "navigation": ["Home", "Products", "About", "Testimonials", "Contact"],
+    "hero": {
+      "headline": "Step Into Premium Style",
+      "subHeadline": "Buea's #1 source for quality imported shoes since 2024",
+      "description": "Discover handpicked footwear shipped directly from top manufacturers. Unmatched quality at wholesale prices delivered right to your door in Cameroon.",
+      "stats": [
+        { "label": "Happy Customers", "value": "2K+" },
+        { "label": "Shoes Delivered", "value": "500+" },
+        { "label": "Customer Rating", "value": "4.9" }
+      ],
+      "callsToAction": [
+        { "label": "Shop Now", "target": "#products" },
+        { "label": "Bulk Orders", "target": "#about" }
+      ],
+      "images": [
+        { "path": "shoe-d.png", "alt": "Premium Sneaker" },
+        { "path": "shoe-b.png", "alt": "Sport Runner" },
+        { "path": "shoe-c.png", "alt": "Training Shoe" }
+      ]
+    }
+  },
+  "products": [
+    {
+      "id": 1,
+      "name": "Classic White Sneakers",
+      "category": "sneakers",
+      "categoryLabel": "Sneakers",
+      "priceXaf": 5500,
+      "description": "Timeless white sneakers for everyday comfort and style.",
+      "imageUrl": "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Classic white sneakers"
+    },
+    {
+      "id": 5,
+      "name": "High-Top Basketball",
+      "category": "sneakers",
+      "categoryLabel": "Sneakers",
+      "priceXaf": 14500,
+      "description": "Premium basketball shoes with ankle support and superior grip.",
+      "imageUrl": "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "High-top basketball shoes"
+    },
+    {
+      "id": 9,
+      "name": "Urban Street Sneakers",
+      "category": "sneakers",
+      "categoryLabel": "Sneakers",
+      "priceXaf": 8500,
+      "description": "Bold streetwear sneakers built for the city grind.",
+      "imageUrl": "https://images.unsplash.com/photo-1552346154-21d32810aba3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Urban street sneakers"
+    },
+    {
+      "id": 10,
+      "name": "Retro Low-Top",
+      "category": "sneakers",
+      "categoryLabel": "Sneakers",
+      "priceXaf": 7000,
+      "description": "Vintage-inspired low-tops with a clean, minimalist profile.",
+      "imageUrl": "https://images.unsplash.com/photo-1491553895911-0055eca6402d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Retro low-top sneakers"
+    },
+    {
+      "id": 11,
+      "name": "Black Leather Sneakers",
+      "category": "sneakers",
+      "categoryLabel": "Sneakers",
+      "priceXaf": 9500,
+      "description": "Sleek black leather sneakers that go from casual to semi-formal.",
+      "imageUrl": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Black leather sneakers"
+    },
+    {
+      "id": 12,
+      "name": "Chunky Platform Sneakers",
+      "category": "sneakers",
+      "categoryLabel": "Sneakers",
+      "priceXaf": 11000,
+      "description": "Bold platform sole for extra height and street-ready style.",
+      "imageUrl": "https://i.pinimg.com/1200x/dd/61/0b/dd610bafcc55fe883290b51596c84edf.jpg",
+      "imageAlt": "Chunky platform sneakers"
+    },
+    {
+      "id": 13,
+      "name": "Canvas Slip-On Sneakers",
+      "category": "sneakers",
+      "categoryLabel": "Sneakers",
+      "priceXaf": 4500,
+      "description": "Lightweight canvas slip-ons perfect for casual everyday wear.",
+      "imageUrl": "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Canvas slip-on sneakers"
+    },
+    {
+      "id": 14,
+      "name": "Neon Sport Sneakers",
+      "category": "sneakers",
+      "categoryLabel": "Sneakers",
+      "priceXaf": 10000,
+      "description": "Vibrant neon colorways with responsive cushioning for active days.",
+      "imageUrl": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Neon sport sneakers"
+    },
+    {
+      "id": 2,
+      "name": "Leather Oxford Shoes",
+      "category": "formal",
+      "categoryLabel": "Formal",
+      "priceXaf": 12000,
+      "description": "Elegant leather oxfords perfect for formal occasions.",
+      "imageUrl": "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Leather oxford shoes"
+    },
+    {
+      "id": 6,
+      "name": "Loafers",
+      "category": "formal",
+      "categoryLabel": "Formal",
+      "priceXaf": 9000,
+      "description": "Classic loafers for a smart casual look.",
+      "imageUrl": "https://images.unsplash.com/photo-1595341888016-a392ef81b7de?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Loafers"
+    },
+    {
+      "id": 15,
+      "name": "Suede Chelsea Boots",
+      "category": "formal",
+      "categoryLabel": "Formal",
+      "priceXaf": 17500,
+      "description": "Premium suede chelsea boots that elevate any formal outfit.",
+      "imageUrl": "https://i.pinimg.com/1200x/16/be/c3/16bec35f9f69de9fb0a03ed888213972.jpg",
+      "imageAlt": "Suede chelsea boots"
+    },
+    {
+      "id": 16,
+      "name": "Derby Dress Shoes",
+      "category": "formal",
+      "categoryLabel": "Formal",
+      "priceXaf": 14000,
+      "description": "Sharp derby shoes crafted for boardroom confidence.",
+      "imageUrl": "https://images.unsplash.com/photo-1533867617858-e7b97e060509?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Derby dress shoes"
+    },
+    {
+      "id": 17,
+      "name": "Patent Leather Monk Straps",
+      "category": "formal",
+      "categoryLabel": "Formal",
+      "priceXaf": 16000,
+      "description": "Two-strap monk shoes in high-shine patent leather for standout elegance.",
+      "imageUrl": "https://images.unsplash.com/photo-1614252369475-531eba835eb1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Patent leather monk strap shoes"
+    },
+    {
+      "id": 18,
+      "name": "Brown Brogue Wingtips",
+      "category": "formal",
+      "categoryLabel": "Formal",
+      "priceXaf": 13500,
+      "description": "Classic wingtip brogues with decorative perforation detailing.",
+      "imageUrl": "https://images.unsplash.com/photo-1449505278894-297fdb3edbc1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Brown brogue wingtips"
+    },
+    {
+      "id": 19,
+      "name": "Women's Block Heel Pumps",
+      "category": "formal",
+      "categoryLabel": "Formal",
+      "priceXaf": 11500,
+      "description": "Stable block heel pumps for all-day professional wear.",
+      "imageUrl": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Women's block heel pumps"
+    },
+    {
+      "id": 3,
+      "name": "Running Pro",
+      "category": "sports",
+      "categoryLabel": "Sports",
+      "priceXaf": 19999,
+      "description": "High-performance running shoes with advanced cushioning.",
+      "imageUrl": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Running Pro sports shoes"
+    },
+    {
+      "id": 7,
+      "name": "Hiking Boots",
+      "category": "sports",
+      "categoryLabel": "Sports",
+      "priceXaf": 18000,
+      "description": "Durable hiking boots with waterproof membrane.",
+      "imageUrl": "https://images.unsplash.com/photo-1545289414-1c3cb1c06238?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Hiking boots"
+    },
+    {
+      "id": 20,
+      "name": "Trail Running Shoes",
+      "category": "sports",
+      "categoryLabel": "Sports",
+      "priceXaf": 22000,
+      "description": "Aggressive grip outsole for off-road trail running and adventure.",
+      "imageUrl": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Trail running shoes"
+    },
+    {
+      "id": 21,
+      "name": "Football Cleats",
+      "category": "sports",
+      "categoryLabel": "Sports",
+      "priceXaf": 16500,
+      "description": "Firm-ground cleats engineered for speed, control, and traction.",
+      "imageUrl": "https://images.unsplash.com/photo-1511886929837-354d827aae26?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Football cleats"
+    },
+    {
+      "id": 22,
+      "name": "Gym Training Shoes",
+      "category": "sports",
+      "categoryLabel": "Sports",
+      "priceXaf": 15000,
+      "description": "Flat-soled cross-trainers built for weightlifting and gym workouts.",
+      "imageUrl": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Gym training shoes"
+    },
+    {
+      "id": 23,
+      "name": "Cycling Shoes",
+      "category": "sports",
+      "categoryLabel": "Sports",
+      "priceXaf": 20000,
+      "description": "Stiff-soled cycling shoes for maximum power transfer on the pedals.",
+      "imageUrl": "https://i.pinimg.com/736x/90/c0/89/90c089964eb12a6395f3393a15f6f410.jpg",
+      "imageAlt": "Cycling shoes"
+    },
+    {
+      "id": 24,
+      "name": "Tennis Court Shoes",
+      "category": "sports",
+      "categoryLabel": "Sports",
+      "priceXaf": 17000,
+      "description": "Lateral support and herringbone tread for hard-court dominance.",
+      "imageUrl": "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Tennis court shoes"
+    },
+    {
+      "id": 4,
+      "name": "Summer Sandals",
+      "category": "sandals",
+      "categoryLabel": "Sandals",
+      "priceXaf": 4000,
+      "description": "Comfortable and breathable sandals for hot summer days.",
+      "imageUrl": "https://images.unsplash.com/photo-1560769629-975ec94e6a86?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Summer sandals"
+    },
+    {
+      "id": 8,
+      "name": "Flip Flops",
+      "category": "sandals",
+      "categoryLabel": "Sandals",
+      "priceXaf": 2500,
+      "description": "Lightweight flip flops for beach and poolside relaxation.",
+      "imageUrl": "https://images.unsplash.com/photo-1603487742131-4160ec999306?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Flip flops"
+    },
+    {
+      "id": 25,
+      "name": "Leather Slide Sandals",
+      "category": "sandals",
+      "categoryLabel": "Sandals",
+      "priceXaf": 6500,
+      "description": "Premium leather slides with cushioned footbed for all-day comfort.",
+      "imageUrl": "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Leather slide sandals"
+    },
+    {
+      "id": 26,
+      "name": "Gladiator Sandals",
+      "category": "sandals",
+      "categoryLabel": "Sandals",
+      "priceXaf": 7500,
+      "description": "Multi-strap gladiator sandals that make a bold fashion statement.",
+      "imageUrl": "https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Gladiator sandals"
+    },
+    {
+      "id": 27,
+      "name": "Sports Sandals",
+      "category": "sandals",
+      "categoryLabel": "Sandals",
+      "priceXaf": 8000,
+      "description": "Rugged outdoor sandals with adjustable straps and toe protection.",
+      "imageUrl": "https://images.unsplash.com/photo-1539185441755-769473a23570?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Sports sandals"
+    },
+    {
+      "id": 28,
+      "name": "Platform Espadrille Sandals",
+      "category": "sandals",
+      "categoryLabel": "Sandals",
+      "priceXaf": 9000,
+      "description": "Woven espadrille platform sandals for a relaxed resort look.",
+      "imageUrl": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Platform espadrille sandals"
+    },
+    {
+      "id": 29,
+      "name": "Ankle Strap Heeled Sandals",
+      "category": "sandals",
+      "categoryLabel": "Sandals",
+      "priceXaf": 10500,
+      "description": "Elegant heeled sandals with secure ankle strap for evening events.",
+      "imageUrl": "https://images.unsplash.com/photo-1515347619252-60a4bf4fff4f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Ankle strap heeled sandals"
+    },
+    {
+      "id": 30,
+      "name": "Kids Velcro Sandals",
+      "category": "sandals",
+      "categoryLabel": "Sandals",
+      "priceXaf": 3500,
+      "description": "Easy velcro fastening sandals built tough for active kids.",
+      "imageUrl": "https://images.unsplash.com/photo-1560072810-1cffb09faf0f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      "imageAlt": "Kids velcro sandals"
+    }
+  ],
+  "catalogSummary": {
+    "totalProducts": 30,
+    "categories": [
+      { "key": "sneakers", "label": "Sneakers", "count": 8, "priceRangeXaf": { "min": 4500, "max": 14500 } },
+      { "key": "formal", "label": "Formal", "count": 7, "priceRangeXaf": { "min": 9000, "max": 17500 } },
+      { "key": "sports", "label": "Sports", "count": 7, "priceRangeXaf": { "min": 15000, "max": 22000 } },
+      { "key": "sandals", "label": "Sandals", "count": 8, "priceRangeXaf": { "min": 2500, "max": 10500 } }
+    ],
+    "mostAffordableProductId": 8,
+    "mostExpensiveProductId": 20,
+    "filters": ["All", "Sneakers", "Formal", "Sports", "Sandals"]
+  },
+  "about": {
+    "originStory": "Founded in 2024 by Mr Charles Tabe, StepUp began as a small boutique on Molyko Street, Buea, with a passion for bringing world-class footwear to Cameroon.",
+    "mission": "To elevate Cameroonian fashion by combining global trends with local craftsmanship, providing affordable luxury that stands the test of time.",
+    "vision": "To become the leading footwear destination in Central Africa while nurturing young Cameroonian designers.",
+    "bueaConnection": "Proudly based in Buea, Cameroon, StepUp sources local materials where possible and supports regional artisans through manufacturing partnerships.",
+    "images": {
+      "founderPhoto": "https://i.pinimg.com/736x/91/7c/2e/917c2ec0361d36a1331bdd5bbe785e84.jpg",
+      "storePhoto": "https://i.pinimg.com/736x/86/99/c9/8699c99ed7af8ff818cd2c266f2b7301.jpg"
+    },
+    "features": [
+      { "name": "Premium Materials", "description": "Imported leathers with local ankara fabric accents." },
+      { "name": "Nationwide Delivery", "description": "Free shipping across Cameroon." },
+      { "name": "30-Day Returns", "description": "No questions asked policy." },
+      { "name": "Community Impact", "description": "10% of profits fund youth skills programs." }
+    ]
+  },
+  "reviews": {
+    "overallRating": 4.8,
+    "verifiedReviewCount": 40,
+    "ratingBreakdown": [
+      { "stars": 5, "count": 34 },
+      { "stars": 4, "count": 6 },
+      { "stars": 3, "count": 0 },
+      { "stars": 2, "count": 0 },
+      { "stars": 1, "count": 0 }
+    ],
+    "trustNotes": [
+      "All reviews from verified purchases",
+      "Independent review collection",
+      "No fake or incentivized reviews"
+    ],
+    "testimonials": [
+      {
+        "reviewer": "Achu Brenda",
+        "location": "Buea, Cameroon",
+        "date": "May 2026",
+        "rating": 5,
+        "productPurchased": "Classic Leather Loafers",
+        "review": "I ordered office loafers for meetings in Douala and they looked even better in person. The size guide was accurate, and the leather feels premium."
+      },
+      {
+        "reviewer": "Tabi Ernest",
+        "location": "Douala, Cameroon",
+        "date": "April 2026",
+        "rating": 5,
+        "productPurchased": "Urban Comfort Sneakers",
+        "review": "The delivery rider found my house in Bonaberi during heavy rain. My sneakers arrived completely dry, neatly packed, and ready to wear."
+      },
+      {
+        "reviewer": "Ngwa Felix",
+        "location": "Limbe, Cameroon",
+        "date": "March 2026",
+        "rating": 5,
+        "productPurchased": "Coastal Everyday Sandals",
+        "review": "I was skeptical about buying footwear online, but StepUp sent progress updates and the sandals fit perfectly. They handled a full beach day with no blisters."
+      },
+      {
+        "reviewer": "Michael Oliveira",
+        "location": "Toronto, Canada",
+        "date": "February 2026",
+        "rating": 5,
+        "productPurchased": "Team Sneaker Bundle",
+        "review": "We ordered bulk sneakers for our staff launch event. StepUp confirmed every size before shipping and the whole set arrived earlier than promised."
+      },
+      {
+        "reviewer": "Relnas Damis",
+        "location": "Sydney, Australia",
+        "date": "January 2026",
+        "rating": 4.5,
+        "productPurchased": "Evening Block Heels",
+        "review": "My heels came with a clean finish, stable grip, and packaging that felt gift-ready. Customer support answered sizing questions in minutes."
+      },
+      {
+        "reviewer": "Elise Kamga",
+        "location": "Yaounde, Cameroon",
+        "date": "December 2025",
+        "rating": 5,
+        "productPurchased": "Flex Run Trainers",
+        "review": "I bought trainers for daily walks and they have the right cushion without feeling heavy. The WhatsApp updates made the order easy to track."
+      }
+    ]
+  },
+  "policies": {
+    "shipping": {
+      "summary": "Free nationwide Cameroon delivery.",
+      "bueaArea": "3-7 days",
+      "otherRegions": "7-14 days",
+      "customerResponsibility": "Customer must provide a correct delivery address."
+    },
+    "returns": {
+      "summary": "30-day return policy.",
+      "conditions": [
+        "Shoes must be unworn.",
+        "Original packaging should be included.",
+        "Worn, custom, or clearance items are not returnable."
+      ],
+      "refundTiming": "7-10 business days after approval."
+    },
+    "payments": {
+      "acceptedMethods": ["MTN Mobile Money", "Orange Money"],
+      "formFields": ["Phone number", "Delivery address"],
+      "afterPayment": "Success overlay with confetti animation and PDF receipt download."
+    },
+    "privacy": {
+      "collectedInformation": ["Name", "Email", "Phone", "Delivery address", "Payment info", "Preferences", "Device/browser data", "Cookies"],
+      "uses": ["Order processing", "Customer service", "Communication", "Personalization", "Analytics", "Fraud prevention", "Legal compliance", "Marketing"],
+      "rights": ["Access or correction", "Marketing opt-out", "Deletion request", "Data portability"]
+    },
+    "terms": {
+      "usage": "Use of the site constitutes agreement to StepUp terms.",
+      "pricing": "Product descriptions and prices may change.",
+      "governingLaw": "Laws of Cameroon; courts in Buea."
+    }
+  },
+  "assets": {
+    "local": [
+      { "path": "styles.css", "purpose": "Main stylesheet" },
+      { "path": "script.js", "purpose": "Product data, cart, payment, and UI logic" },
+      { "path": "shoe-d.png", "purpose": "Hero product image" },
+      { "path": "shoe-b.png", "purpose": "Hero product image" },
+      { "path": "shoe-c.png", "purpose": "Hero product image" },
+      { "path": "shoe-a.png", "purpose": "Unused/local shoe image" },
+      { "path": "image.png", "purpose": "Local product image" },
+      { "path": "image1.png", "purpose": "Local product image" },
+      { "path": "image2.png", "purpose": "Local product image" }
+    ],
+    "external": [
+      { "name": "Favicon", "url": "https://i.pinimg.com/736x/40/3b/a6/403ba6840b946cc999e9aa29172bceb3.jpg" },
+      { "name": "Founder photo", "url": "https://i.pinimg.com/736x/91/7c/2e/917c2ec0361d36a1331bdd5bbe785e84.jpg" },
+      { "name": "Store photo", "url": "https://i.pinimg.com/736x/86/99/c9/8699c99ed7af8ff818cd2c266f2b7301.jpg" },
+      { "name": "MTN MoMo logo", "url": "https://i.pinimg.com/1200x/7b/9f/ce/7b9fce7a65a393b17d61f4061f7e7375.jpg" },
+      { "name": "Orange Money logo", "url": "https://i.pinimg.com/736x/d4/0a/ae/d40aaed93de5fb669b845167963c6d9f.jpg" }
+    ],
+    "cdns": [
+      { "name": "Font Awesome 6.0.0 beta 3", "url": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" },
+      { "name": "Google Fonts Inter", "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" },
+      { "name": "jsPDF 2.5.1", "url": "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" },
+      { "name": "Vercel Analytics", "url": "/_vercel/insights/script.js" }
+    ]
+  },
+  "aiResponseGuidelines": {
+    "persona": "Friendly StepUp shopping assistant for footwear customers.",
+    "rules": [
+      "Answer only from this data store unless the user asks for general shoe-care advice.",
+      "When recommending products, include name, price in XAF, category, short reason, and imageUrl.",
+      "If the user asks for pictures, return products or assets with imageUrl/local path so the frontend can render them.",
+      "Do not invent unavailable sizes, stock status, discounts, or delivery dates.",
+      "If an answer is not in the data, say so and suggest contacting StepUp.",
+      "For payments, mention MTN Mobile Money and Orange Money only.",
+      "For legal/privacy topics, summarize and point users to terms.html or privacy.html."
+    ],
+    "responseShape": {
+      "answer": "Plain customer-facing answer.",
+      "items": "Optional array of product or asset cards with title/name, priceXaf when relevant, imageUrl, description, and category.",
+      "suggestions": "Optional follow-up prompts."
+    }
+  }
+}

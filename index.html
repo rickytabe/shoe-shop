@@ -585,6 +585,48 @@
         </div>
     </div>
 
+    <div class="ai-chat-widget" id="stepup-ai-chat">
+        <button class="ai-chat-toggle" type="button" aria-label="Open StepUp AI chat" aria-expanded="false">
+            <i class="fas fa-comments"></i>
+            <span>Ask StepUp AI</span>
+        </button>
+
+        <div class="ai-chat-promo" id="ai-chat-promo">
+            <button class="ai-chat-promo-dismiss" aria-label="Dismiss" id="ai-promo-dismiss">&times;</button>
+            <span class="ai-chat-promo-icon">👟✨</span>
+            <p class="ai-chat-promo-text">Need help finding the perfect shoe?</p>
+            <p class="ai-chat-promo-sub">Ask our AI assistant about products, prices, delivery &amp; more!</p>
+        </div>
+
+        <section class="ai-chat-panel" aria-label="StepUp AI chat" hidden>
+            <div class="ai-chat-header">
+                <div>
+                    <span class="ai-chat-kicker">StepUp AI</span>
+                    <h3>Shopping Assistant</h3>
+                </div>
+                <button class="ai-chat-close" type="button" aria-label="Close chat">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="ai-chat-messages" role="log" aria-live="polite"></div>
+
+            <div class="ai-chat-suggestions" aria-label="Suggested questions">
+                <button type="button">Show me affordable sneakers</button>
+                <button type="button">What payment methods do you accept?</button>
+                <button type="button">Show owner photo</button>
+            </div>
+
+            <form class="ai-chat-form">
+                <label class="sr-only" for="ai-chat-input">Ask StepUp AI</label>
+                <input id="ai-chat-input" type="text" placeholder="Ask about shoes, prices, delivery..." autocomplete="off">
+                <button type="submit" aria-label="Send message">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </section>
+    </div>
+
     <!-- Cookie Consent Popup -->
     <div class="cookie-consent" id="cookieConsent">
         <div class="cookie-content">
@@ -601,6 +643,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
+    <script src="chat-agent.js"></script>
     <script>
         // Cookie Consent Management
         function initCookieConsent() {

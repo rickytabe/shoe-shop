@@ -328,10 +328,6 @@ const products = [
 
     // Store last receipt data for download button
     let lastReceiptData = null;
-    const backToTop = document.createElement('div');
-    backToTop.className = 'back-to-top';
-    backToTop.innerHTML = '<i class="fas fa-arrow-up"></i>';
-    document.body.appendChild(backToTop);
 
     // Track purchased product IDs for delivery badges
     let purchasedProductIds = JSON.parse(localStorage.getItem('stepup_purchased') || '[]');
@@ -425,6 +421,37 @@ menuToggle.addEventListener('click', () => {
         // Show cart modal
         cartModal.style.display = 'flex';
     }
+    
+    // Add to cart from chat function (callable by chat-agent.js)
+    function addProductFromChat(productId) {
+        const product = products.find(p => p.id === productId);
+        
+        if (!product) {
+            alert('Product not found');
+            return;
+        }
+        
+        // Check if product is already in cart
+        const existingItem = cart.find(item => item.id === productId);
+        
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({
+                ...product,
+                quantity: 1
+            });
+        }
+        
+        updateCart();
+        
+        // Show cart modal
+        cartModal.style.display = 'flex';
+    }
+    
+    // Make the function globally accessible for chat
+    window.addProductFromChat = addProductFromChat;
+    window.stepupProducts = products;
 
     // Update cart function
     function updateCart() {
@@ -941,21 +968,6 @@ menuToggle.addEventListener('click', () => {
             if (link.getAttribute('href') === `#${current}`) {
                 link.classList.add('active');
             }
-        });
-        
-        // Show/hide back to top button
-        if (window.pageYOffset > 300) {
-            backToTop.classList.add('active');
-        } else {
-            backToTop.classList.remove('active');
-        }
-    });
-
-    // Back to top button
-    backToTop.addEventListener('click', () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
         });
     });
 
