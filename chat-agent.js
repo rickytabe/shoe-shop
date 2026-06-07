@@ -13,7 +13,7 @@
 
     document.addEventListener('DOMContentLoaded', initChatAgent);
 
-    async function initChatAgent() {
+    function initChatAgent() {
         const root = document.getElementById('stepup-ai-chat');
         if (!root) return;
 
@@ -32,24 +32,43 @@
 
         const state = {
             store: null,
+            storePromise: null,
             history: [],
             busy: false,
             openedOnce: false
         };
 
-        state.store = await loadStoreData();
         bindChatEvents(elements, state);
     }
 
     async function loadStoreData() {
         try {
-            const response = await fetch(STORE_URL, { cache: 'no-store' });
+            const response = await fetch(STORE_URL);
             if (!response.ok) throw new Error('Unable to load store data');
             return await response.json();
         } catch (error) {
             console.warn('StepUp AI data store unavailable:', error);
             return null;
         }
+    }
+
+    function ensureStoreData(state) {
+        if (state.store) {
+            return Promise.resolve(state.store);
+        }
+
+        if (!state.storePromise) {
+            state.storePromise = loadStoreData()
+                .then(store => {
+                    state.store = store;
+                    return store;
+                })
+                .finally(() => {
+                    state.storePromise = null;
+                });
+        }
+
+        return state.storePromise;
     }
 
     function dismissPromo(elements) {
@@ -107,6 +126,7 @@
             const typingNode = appendTyping(elements.messages);
 
             try {
+                await ensureStoreData(state);
                 const response = await askStepUpAi(message, state);
                 typingNode.remove();
                 appendMessage(elements.messages, 'assistant', response);
@@ -142,10 +162,9 @@
 
         if (!state.openedOnce) {
             state.openedOnce = true;
+            ensureStoreData(state).catch(() => {});
             appendMessage(elements.messages, 'assistant', {
-                answer: state.store
-                    ? 'Hi, I am the StepUp AI assistant. Ask me about products, prices, images, delivery, payments, returns, or the owner.'
-                    : 'Hi, I am StepUp AI. I could not load the store data yet, so please run the site through a local server or deploy it to use chat fully.',
+                answer: 'Hi, I am the StepUp AI assistant. Ask me about products, prices, images, delivery, payments, returns, or the owner.',
                 suggestions: DEFAULT_SUGGESTIONS
             });
         }
@@ -350,7 +369,10 @@
                 card.classList.add('is-product');
                 card.dataset.productId = item.id;
                 card.style.cursor = 'pointer';
-                card.addEventListener('click', () => addProductToCart(item));
+                card.addEventListener('click', () => {
+                    const control = card.querySelector('.ai-chat-cart-control');
+                    handleProductAdd(item, control);
+                });
             }
 
             // Image (only for non-review cards with images)
@@ -359,6 +381,7 @@
                 image.src = imageSource;
                 image.alt = item.imageAlt || item.name || item.title || 'StepUp image';
                 image.loading = 'lazy';
+                image.decoding = 'async';
                 image.addEventListener('error', () => {
                     image.remove();
                     card.classList.add('no-image');
@@ -414,22 +437,26 @@
                     content.appendChild(description);
                 }
                 
-                // Add "Add to Cart" button for products
+                // Add cart controls for products
                 if (isProduct) {
-                    const addBtn = document.createElement('button');
-                    addBtn.className = 'ai-chat-add-to-cart';
-                    addBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
-                    addBtn.addEventListener('click', (e) => {
+                    const cartControl = document.createElement('div');
+                    cartControl.className = 'ai-chat-cart-control';
+                    cartControl.dataset.productId = item.id;
+                    syncCartControl(cartControl);
+                    cartControl.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        addProductToCart(item);
-                        addBtn.textContent = '✓ Added!';
-                        addBtn.style.background = '#00c853';
-                        setTimeout(() => {
-                            addBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
-                            addBtn.style.background = '';
-                        }, 1500);
+
+                        if (e.target.closest('.ai-chat-cart-minus')) {
+                            removeProductFromCart(item);
+                            syncCartControl(cartControl);
+                            return;
+                        }
+
+                        if (e.target.closest('.ai-chat-cart-plus') || e.target.closest('.ai-chat-add-to-cart')) {
+                            handleProductAdd(item, cartControl);
+                        }
                     });
-                    content.appendChild(addBtn);
+                    content.appendChild(cartControl);
                 }
             }
 
@@ -439,17 +466,76 @@
 
         return list;
     }
+
+    function getCartQuantity(productId) {
+        if (typeof window.getStepupCartQuantity === 'function') {
+            return window.getStepupCartQuantity(productId);
+        }
+
+        if (Array.isArray(window.stepupCartItems)) {
+            const item = window.stepupCartItems.find(cartItem => cartItem.id === Number(productId));
+            return item ? item.quantity : 0;
+        }
+
+        return 0;
+    }
+
+    function syncCartControl(control) {
+        if (!control) return;
+
+        const quantity = getCartQuantity(control.dataset.productId);
+        const card = control.closest('.ai-chat-item');
+
+        if (quantity > 0) {
+            control.classList.add('is-in-cart');
+            if (card) card.classList.add('is-in-cart');
+            control.innerHTML = `
+                <button type="button" class="ai-chat-cart-step ai-chat-cart-minus" aria-label="Remove one item">-</button>
+                <span class="ai-chat-cart-status">In cart</span>
+                <span class="ai-chat-cart-qty" aria-live="polite">${quantity}</span>
+                <button type="button" class="ai-chat-cart-step ai-chat-cart-plus" aria-label="Add one more item">+</button>
+            `;
+        } else {
+            control.classList.remove('is-in-cart');
+            if (card) card.classList.remove('is-in-cart');
+            control.innerHTML = '<button type="button" class="ai-chat-add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</button>';
+        }
+    }
+
+    function syncAllCartControls() {
+        document.querySelectorAll('.ai-chat-cart-control[data-product-id]').forEach(syncCartControl);
+    }
+
+    function handleProductAdd(item, control) {
+        addProductToCart(item);
+        syncCartControl(control);
+    }
+
+    window.addEventListener('stepup:cart-updated', syncAllCartControls);
     
     function addProductToCart(item) {
         // Access the global cart from the main script
         // Look for cart in window or parent scope
+        let quantity = 0;
+
         if (typeof window.stepupCart !== 'undefined') {
-            window.stepupCart(item.id);
+            quantity = window.stepupCart(item.id);
         } else if (typeof window.addProductFromChat !== 'undefined') {
-            window.addProductFromChat(item.id);
+            quantity = window.addProductFromChat(item.id, { openCart: false });
         } else {
             alert('Add to Cart feature is not yet available. Please refresh the page.');
         }
+
+        return Number(quantity) || getCartQuantity(item.id);
+    }
+
+    function removeProductFromCart(item) {
+        if (typeof window.removeProductFromChat === 'function') {
+            return window.removeProductFromChat(item.id);
+        }
+
+        alert('Cart quantity controls are not yet available. Please refresh the page.');
+        return getCartQuantity(item.id);
     }
 
     function renderSuggestions(container, suggestions) {

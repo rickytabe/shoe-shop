@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StepUp - Premium Footwear</title>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -98,9 +101,9 @@
             <div class="hero-right">
                 <div class="hero-glow"></div>
                 <div class="hero-product-stage">
-                    <img src="shoe-d.png" alt="Premium Sneaker" class="hero-shoe active" data-index="0">
-                    <img src="shoe-b.png" alt="Sport Runner" class="hero-shoe" data-index="1">
-                    <img src="shoe-c.png" alt="Training Shoe" class="hero-shoe" data-index="2">
+                    <img src="shoe-d.png" alt="Premium Sneaker" class="hero-shoe active" data-index="0" loading="eager" decoding="async" fetchpriority="high">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-src="shoe-b.png" alt="Sport Runner" class="hero-shoe" data-index="1" loading="lazy" decoding="async" fetchpriority="low">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-src="shoe-c.png" alt="Training Shoe" class="hero-shoe" data-index="2" loading="lazy" decoding="async" fetchpriority="low">
                 </div>
                 <div class="hero-shoe-shadow"></div>
                 <div class="hero-indicators">
@@ -134,7 +137,7 @@
                 <h2>Our Story</h2>
                 <div class="founders-card">
                     <div class="founders-image">
-                        <img src="https://i.pinimg.com/736x/91/7c/2e/917c2ec0361d36a1331bdd5bbe785e84.jpg" alt="Founders Brenda & Tabe Rickson">
+                        <img src="https://i.pinimg.com/736x/91/7c/2e/917c2ec0361d36a1331bdd5bbe785e84.jpg" alt="Founders Brenda & Tabe Rickson" loading="lazy" decoding="async">
                     </div>
                     <div class="founders-info">
                         <h3>Meet The Visionary</h3>
@@ -185,7 +188,7 @@
             </div>
             
             <div class="about-image">
-                <img src="https://i.pinimg.com/736x/86/99/c9/8699c99ed7af8ff818cd2c266f2b7301.jpg" alt="StepUp store in Buea" style="height:75vh;">
+                <img src="https://i.pinimg.com/736x/86/99/c9/8699c99ed7af8ff818cd2c266f2b7301.jpg" alt="StepUp store in Buea" style="height:75vh;" loading="lazy" decoding="async">
             </div>
         </div>
     </section>
@@ -514,7 +517,7 @@
                 <label class="payment-method-card active" for="method-mtn">
                     <input type="radio" name="payment-method" id="method-mtn" value="MTN MoMo" checked>
                     <div class="payment-logo mtn-logo">
-                        <img src="https://i.pinimg.com/1200x/7b/9f/ce/7b9fce7a65a393b17d61f4061f7e7375.jpg" alt="MTN MoMo logo">
+                        <img src="https://i.pinimg.com/1200x/7b/9f/ce/7b9fce7a65a393b17d61f4061f7e7375.jpg" alt="MTN MoMo logo" loading="lazy" decoding="async">
                     </div>
                     <span class="method-name">MTN MoMo</span>
                 </label>
@@ -522,7 +525,7 @@
                 <label class="payment-method-card" for="method-orange">
                     <input type="radio" name="payment-method" id="method-orange" value="Orange Money">
                     <div class="payment-logo orange-logo">
-                        <img src="https://i.pinimg.com/736x/d4/0a/ae/d40aaed93de5fb669b845167963c6d9f.jpg" alt="Orange Money logo">
+                        <img src="https://i.pinimg.com/736x/d4/0a/ae/d40aaed93de5fb669b845167963c6d9f.jpg" alt="Orange Money logo" loading="lazy" decoding="async">
                     </div>
                     <span class="method-name">Orange Money</span>
                 </label>
@@ -642,7 +645,6 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
     <script src="chat-agent.js"></script>
     <script>

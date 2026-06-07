@@ -401,6 +401,7 @@ const products = [
     const successDownloadBtn = document.getElementById('success-download-btn');
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
+    const JSPDF_URL = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
 
     // Theme logic
     const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -424,9 +425,37 @@ const products = [
 
     // Store last receipt data for download button
     let lastReceiptData = null;
+    let jsPdfPromise = null;
 
     // Track purchased product IDs for delivery badges
     let purchasedProductIds = JSON.parse(localStorage.getItem('stepup_purchased') || '[]');
+    let currentProductFilter = 'all';
+    let hasRenderedProducts = false;
+
+    function getCartSnapshot() {
+        return cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity
+        }));
+    }
+
+    function getCartQuantity(productId) {
+        const item = cart.find(cartItem => cartItem.id === Number(productId));
+        return item ? item.quantity : 0;
+    }
+
+    function publishCartState() {
+        const detail = {
+            items: getCartSnapshot(),
+            totalItems: cart.reduce((total, item) => total + item.quantity, 0),
+            total: getCartTotal()
+        };
+
+        window.stepupCartItems = detail.items;
+        window.dispatchEvent(new CustomEvent('stepup:cart-updated', { detail }));
+    }
 
     
    // Mobile sidebar toggle
@@ -453,11 +482,13 @@ menuToggle.addEventListener('click', () => {
 
     // Display products
     function displayProducts(filter = 'all') {
+        currentProductFilter = filter;
         productGrid.innerHTML = '';
         
         const filteredProducts = filter === 'all' 
             ? products 
             : products.filter(product => product.category === filter);
+        const productCards = document.createDocumentFragment();
         
         filteredProducts.forEach(product => {
             const productCard = document.createElement('div');
@@ -472,7 +503,7 @@ menuToggle.addEventListener('click', () => {
             productCard.innerHTML = `
                 <div class="product-image">
                     ${deliveryBadge}
-                    <img src="${product.image}" alt="${product.name}">
+                    <img src="${product.image}" alt="${product.name}" loading="lazy" decoding="async" fetchpriority="low">
                 </div>
                 <div class="product-info">
                     <h3>${product.name}</h3>
@@ -480,20 +511,49 @@ menuToggle.addEventListener('click', () => {
                     <div class="product-price">
                         <span class="price">XAF ${product.price}</span>
                         <button class="add-to-cart" data-id="${product.id}">
-                            <i class="fas fa-plus"></i>
+                            <i class="fas fa-plus"></i> Buy
                         </button>
                     </div>
                 </div>
             `;
             
-            productGrid.appendChild(productCard);
+            productCards.appendChild(productCard);
         });
-        
-        // Add event listeners to add-to-cart buttons
-        document.querySelectorAll('.add-to-cart').forEach(button => {
-            button.addEventListener('click', addToCart);
-        });
+
+        productGrid.appendChild(productCards);
     }
+
+    function renderProductsNow(filter = currentProductFilter) {
+        hasRenderedProducts = true;
+        displayProducts(filter);
+    }
+
+    function scheduleInitialProductRender() {
+        const productsSection = document.getElementById('products');
+
+        if (!productsSection || !('IntersectionObserver' in window)) {
+            const schedule = window.requestIdleCallback || function(callback) {
+                return setTimeout(callback, 500);
+            };
+            schedule(() => renderProductsNow());
+            return;
+        }
+
+        const observer = new IntersectionObserver(entries => {
+            if (!entries.some(entry => entry.isIntersecting)) return;
+            observer.disconnect();
+            if (hasRenderedProducts) return;
+            renderProductsNow();
+        }, { rootMargin: '600px 0px' });
+
+        observer.observe(productsSection);
+    }
+
+    productGrid.addEventListener('click', event => {
+        const button = event.target.closest('.add-to-cart');
+        if (!button || !productGrid.contains(button)) return;
+        addToCart(event);
+    });
 
     // Add to cart function
     function addToCart(e) {
@@ -519,16 +579,18 @@ menuToggle.addEventListener('click', () => {
     }
     
     // Add to cart from chat function (callable by chat-agent.js)
-    function addProductFromChat(productId) {
-        const product = products.find(p => p.id === productId);
+    function addProductFromChat(productId, options = {}) {
+        const normalizedProductId = Number(productId);
+        const product = products.find(p => p.id === normalizedProductId);
+        const shouldOpenCart = options.openCart !== false;
         
         if (!product) {
             alert('Product not found');
-            return;
+            return 0;
         }
         
         // Check if product is already in cart
-        const existingItem = cart.find(item => item.id === productId);
+        const existingItem = cart.find(item => item.id === normalizedProductId);
         
         if (existingItem) {
             existingItem.quantity += 1;
@@ -541,12 +603,35 @@ menuToggle.addEventListener('click', () => {
         
         updateCart();
         
-        // Show cart modal
-        cartModal.style.display = 'flex';
+        if (shouldOpenCart) {
+            cartModal.style.display = 'flex';
+        }
+
+        return getCartQuantity(normalizedProductId);
+    }
+
+    function removeProductFromChat(productId) {
+        const normalizedProductId = Number(productId);
+        const existingItem = cart.find(item => item.id === normalizedProductId);
+
+        if (!existingItem) {
+            return 0;
+        }
+
+        if (existingItem.quantity > 1) {
+            existingItem.quantity -= 1;
+        } else {
+            cart = cart.filter(item => item.id !== normalizedProductId);
+        }
+
+        updateCart();
+        return getCartQuantity(normalizedProductId);
     }
     
     // Make the function globally accessible for chat
     window.addProductFromChat = addProductFromChat;
+    window.removeProductFromChat = removeProductFromChat;
+    window.getStepupCartQuantity = getCartQuantity;
     window.stepupProducts = products;
 
     // Update cart function
@@ -554,6 +639,7 @@ menuToggle.addEventListener('click', () => {
         // Update cart count
         const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
         cartCount.textContent = totalItems;
+        publishCartState();
         
         // Update cart items
         cartItemsContainer.innerHTML = '';
@@ -572,7 +658,7 @@ menuToggle.addEventListener('click', () => {
             
             cartItem.innerHTML = `
                 <div class="cart-item-image">
-                    <img src="${item.image}" alt="${item.name}">
+                    <img src="${item.image}" alt="${item.name}" loading="lazy" decoding="async">
                 </div>
                 <div class="cart-item-details">
                     <h4>${item.name}</h4>
@@ -669,8 +755,40 @@ menuToggle.addEventListener('click', () => {
         });
     }
 
-    function downloadReceipt(reference, method, phone, address, items, total) {
-        if (!window.jspdf || !window.jspdf.jsPDF) {
+    function loadJsPdf() {
+        if (window.jspdf && window.jspdf.jsPDF) {
+            return Promise.resolve(window.jspdf);
+        }
+
+        if (!jsPdfPromise) {
+            jsPdfPromise = new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = JSPDF_URL;
+                script.async = true;
+                script.onload = () => {
+                    if (window.jspdf && window.jspdf.jsPDF) {
+                        resolve(window.jspdf);
+                    } else {
+                        reject(new Error('jsPDF loaded without expected API'));
+                    }
+                };
+                script.onerror = () => reject(new Error('Unable to load jsPDF'));
+                document.head.appendChild(script);
+            }).catch(error => {
+                jsPdfPromise = null;
+                throw error;
+            });
+        }
+
+        return jsPdfPromise;
+    }
+
+    async function downloadReceipt(reference, method, phone, address, items, total) {
+        try {
+            await loadJsPdf();
+        } catch (error) {
+            console.warn('Receipt generator unavailable:', error);
+            alert('The receipt generator could not load. Please try again in a moment.');
             return;
         }
 
@@ -744,7 +862,7 @@ menuToggle.addEventListener('click', () => {
             
             // Filter products
             const filter = button.dataset.filter;
-            displayProducts(filter);
+            renderProductsNow(filter);
         });
     });
 
@@ -913,10 +1031,18 @@ menuToggle.addEventListener('click', () => {
 
     successCloseBtn.addEventListener('click', hideSuccessOverlay);
 
-    successDownloadBtn.addEventListener('click', function() {
+    successDownloadBtn.addEventListener('click', async function() {
         if (lastReceiptData) {
             const d = lastReceiptData;
-            downloadReceipt(d.reference, d.method, d.phone, d.address, d.items, d.total);
+            successDownloadBtn.disabled = true;
+            const originalContent = successDownloadBtn.innerHTML;
+            successDownloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing...';
+            try {
+                await downloadReceipt(d.reference, d.method, d.phone, d.address, d.items, d.total);
+            } finally {
+                successDownloadBtn.disabled = false;
+                successDownloadBtn.innerHTML = originalContent;
+            }
         }
     });
 
@@ -965,7 +1091,7 @@ menuToggle.addEventListener('click', () => {
             // Reset everything
             cart = [];
             updateCart();
-            displayProducts(); // re-render to show delivery badges
+            renderProductsNow(); // re-render to show delivery badges
             paymentForm.reset();
             paymentItemsContainer.innerHTML = '';
             document.getElementById('method-mtn').checked = true;
@@ -1068,7 +1194,7 @@ menuToggle.addEventListener('click', () => {
     });
 
     // Initialize
-    displayProducts();
+    scheduleInitialProductRender();
 });
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -1125,7 +1251,18 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentShoe = 0;
     let heroInterval;
 
+    function loadHeroShoe(shoe) {
+        if (!shoe || !shoe.dataset.src) return;
+        shoe.src = shoe.dataset.src;
+        delete shoe.dataset.src;
+    }
+
+    function preloadHeroShoes() {
+        heroShoes.forEach(loadHeroShoe);
+    }
+
     function showShoe(index) {
+        loadHeroShoe(heroShoes[index]);
         heroShoes.forEach(s => s.classList.remove('active'));
         heroDots.forEach(d => d.classList.remove('active'));
         heroShoes[index].classList.add('active');
@@ -1147,5 +1284,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    const schedulePreload = window.requestIdleCallback || function(callback) {
+        return setTimeout(callback, 1200);
+    };
+
+    schedulePreload(preloadHeroShoes);
     startRotation();
 });

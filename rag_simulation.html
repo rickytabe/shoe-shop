@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StepUp AI — RAG Pipeline Simulation</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://i.pinimg.com/736x/40/3b/a6/403ba6840b946cc999e9aa29172bceb3.jpg">
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', currentTheme);
+        });
+    </script>
+    <style>
+        /* ─── Page Layout ──────────────────────────────── */
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem 4rem;
+        }
+
+        .rag-page {
+            width: 100%;
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        /* ─── Header ───────────────────────────────────── */
+        .rag-hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding: 2.5rem 2rem 2rem;
+            border-radius: 20px;
+            background: var(--section-grad);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+        .rag-hero::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -20%;
+            width: 140%;
+            height: 140%;
+            background: radial-gradient(circle at 30% 40%, rgba(255,107,107,0.08) 0%, transparent 60%),
+                        radial-gradient(circle at 70% 60%, rgba(78,205,196,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .rag-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 99px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-color);
+            background: rgba(255,107,107,0.1);
+            border: 1px solid rgba(255,107,107,0.2);
+            margin-bottom: 1rem;
+        }
+        .rag-hero h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .rag-hero p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        .rag-back {
+            position: absolute;
+            top: 1.2rem;
+            left: 1.2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .rag-back:hover { color: var(--primary-color); }
+
+        /* ─── Theme Toggle ─────────────────────────────── */
+        .rag-theme-toggle {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        .rag-theme-toggle:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* ─── Input Section ────────────────────────────── */
+        .rag-input-section {
+            margin-bottom: 2rem;
+        }
+        .rag-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+        .rag-input {
+            flex: 1;
+            padding: 14px 18px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            border-radius: 14px;
+            border: 1.5px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            outline: none;
+            transition: all 0.25s;
+        }
+        .rag-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(255,107,107,0.1);
+        }
+        .rag-run-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary-color), #ff8e8e);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.25s;
+            white-space: nowrap;
+        }
+        .rag-run-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(255,107,107,0.35);
+        }
+        .rag-run-btn:active { transform: translateY(0); }
+        .rag-run-btn.is-running {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .rag-presets {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .rag-presets-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .rag-preset-btn {
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .rag-preset-btn:hover {
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+            background: rgba(78,205,196,0.06);
+        }
+
+        /* ─── Pipeline ─────────────────────────────────── */
+        .rag-pipeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+        }
+
+        /* Connecting line */
+        .rag-connector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 32px;
+            position: relative;
+        }
+        .rag-connector::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 100%;
+            background: var(--border-color);
+            left: 33px;
+        }
+        .rag-connector i {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 1.5px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            z-index: 1;
+            position: relative;
+            left: 0;
+            margin-left: 22px;
+            margin-right: auto;
+        }
+        .rag-connector.done-connector::before {
+            background: var(--secondary-color);
+        }
+        .rag-connector.done-connector i {
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        /* ─── Stage Card ───────────────────────────────── */
+        .rag-stage {
+            border-radius: 16px;
+            border: 1.5px solid var(--border-color);
+            background: var(--card-bg);
+            padding: 0;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.5;
+        }
+        .rag-stage.idle { opacity: 0.5; }
+        .rag-stage.active {
+            opacity: 1;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(255,107,107,0.08), var(--shadow-md);
+        }
+        .rag-stage.done {
+            opacity: 1;
+            border-color: var(--secondary-color);
+        }
+
+        .rag-stage-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 20px;
+        }
+
+        .rag-stage-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            transition: all 0.3s;
+            background: var(--light-gray);
+            color: var(--text-muted);
+        }
+        .rag-stage.active .rag-stage-icon {
+            background: linear-gradient(135deg, var(--primary-color), #ff8e8e);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(255,107,107,0.3);
+        }
+        .rag-stage.done .rag-stage-icon {
+            background: linear-gradient(135deg, var(--secondary-color), #6ee7da);
+            color: #fff;
+        }
+
+        .rag-stage-info { flex: 1; }
+        .rag-stage-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 2px;
+        }
+        .rag-stage-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .rag-stage-status {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 12px;
+            border-radius: 99px;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+        .rag-stage .rag-stage-status {
+            background: var(--light-gray);
+            color: var(--text-muted);
+        }
+        .rag-stage.active .rag-stage-status {
+            background: rgba(255,107,107,0.12);
+            color: var(--primary-color);
+        }
+        .rag-stage.done .rag-stage-status {
+            background: rgba(78,205,196,0.12);
+            color: var(--secondary-color);
+        }
+
+        /* Stage body */
+        .rag-stage-body {
+            padding: 0 20px 18px;
+            display: none;
+            border-top: 1px solid var(--border-color);
+            margin-top: 0;
+            padding-top: 16px;
+        }
+        .rag-stage.active .rag-stage-body,
+        .rag-stage.done .rag-stage-body { display: block; }
+
+        .rag-stage-body-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        /* ─── Stage 1: Question ────────────────────────── */
+        .rag-question-display {
+            background: var(--light-gray);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 14px;
+            color: var(--text-color);
+            font-weight: 500;
+            position: relative;
+        }
+        .rag-question-display::before {
+            content: '"';
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary-color);
+            opacity: 0.3;
+            position: absolute;
+            top: 4px;
+            left: 10px;
+        }
+
+        /* ─── Stage 2: Embedding ───────────────────────── */
+        .rag-embed-grid {
+            display: flex;
+            gap: 3px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .rag-embed-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 2px;
+            background: var(--border-color);
+            transition: background 0.15s, transform 0.15s;
+        }
+        .rag-embed-dot.lit {
+            background: var(--primary-color);
+            transform: scale(1.3);
+        }
+        .rag-embed-info {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .rag-embed-info i { color: var(--secondary-color); }
+
+        /* ─── Stage 3: Vector Search ───────────────────── */
+        .rag-chunk-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 8px;
+        }
+        .rag-chunk {
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: var(--light-gray);
+            transition: all 0.25s;
+            text-align: center;
+        }
+        .rag-chunk.scanning {
+            border-color: var(--accent-color);
+            background: rgba(255,209,102,0.08);
+            color: var(--accent-color);
+            transform: scale(1.03);
+        }
+        .rag-chunk.retrieved {
+            border-color: var(--secondary-color);
+            background: rgba(78,205,196,0.08);
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+        .rag-chunk.not-matched {
+            opacity: 0.35;
+        }
+
+        /* ─── Stage 4: Retrieved ───────────────────────── */
+        .rag-retrieved-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: var(--light-gray);
+            border: 1px solid var(--border-color);
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+        .rag-retrieved-item:hover {
+            border-color: var(--secondary-color);
+        }
+        .rag-retrieved-rank {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: rgba(78,205,196,0.12);
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .rag-retrieved-name {
+            flex: 1;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        .rag-retrieved-score {
+            font-size: 11px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 4px 10px;
+            border-radius: 8px;
+        }
+        .rag-score-high {
+            background: rgba(78,205,196,0.12);
+            color: var(--secondary-color);
+        }
+        .rag-score-med {
+            background: rgba(255,209,102,0.12);
+            color: #e6a800;
+        }
+        .rag-score-low {
+            background: var(--light-gray);
+            color: var(--text-muted);
+        }
+
+        /* ─── Stage 5: Augmented Prompt ────────────────── */
+        .rag-prompt-box {
+            background: var(--light-gray);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            color: var(--text-muted);
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 260px;
+            overflow-y: auto;
+        }
+        .rag-prompt-box .sys { color: var(--primary-color); font-weight: 600; }
+        .rag-prompt-box .ctx { color: var(--secondary-color); }
+        .rag-prompt-box .usr { color: var(--accent-color); font-weight: 600; }
+
+        /* ─── Stage 6: Answer ──────────────────────────── */
+        .rag-answer-box {
+            background: linear-gradient(135deg, rgba(78,205,196,0.06), rgba(78,205,196,0.02));
+            border: 1.5px solid var(--secondary-color);
+            border-radius: 14px;
+            padding: 18px 20px;
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-color);
+            position: relative;
+            min-height: 50px;
+        }
+        .rag-answer-box::before {
+            content: '🤖';
+            position: absolute;
+            top: -12px;
+            left: 16px;
+            font-size: 20px;
+            background: var(--card-bg);
+            padding: 0 6px;
+        }
+        .rag-answer-box.typing::after {
+            content: '▊';
+            animation: cursor-blink 0.7s step-end infinite;
+            color: var(--primary-color);
+            font-weight: 300;
+        }
+        @keyframes cursor-blink { 50% { opacity: 0; } }
+
+        /* ─── Footer Actions ───────────────────────────── */
+        .rag-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+        }
+        .rag-elapsed {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .rag-reset-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .rag-reset-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* ─── Responsive ───────────────────────────────── */
+        @media (max-width: 600px) {
+            .rag-hero h1 { font-size: 1.5rem; }
+            .rag-input-group { flex-direction: column; }
+            .rag-run-btn { width: 100%; justify-content: center; }
+            .rag-stage-header { padding: 14px 16px; }
+            .rag-stage-body { padding: 0 16px 14px; }
+            .rag-chunk-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+            .rag-connector::before { left: 27px; }
+            .rag-connector i { margin-left: 16px; }
+        }
+
+        /* ─── Smooth stage entrance ────────────────────── */
+        @keyframes stage-pop {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .rag-stage.active { animation: stage-pop 0.35s ease-out; }
+
+        /* ─── Pulse for active icon ────────────────────── */
+        @keyframes icon-pulse {
+            0%, 100% { box-shadow: 0 4px 12px rgba(255,107,107,0.3); }
+            50% { box-shadow: 0 4px 20px rgba(255,107,107,0.5); }
+        }
+        .rag-stage.active .rag-stage-icon { animation: icon-pulse 1.5s ease-in-out infinite; }
+        .rag-stage.done .rag-stage-icon { animation: none; }
+    </style>
+</head>
+<body>
+
+<div class="rag-page">
+
+    <!-- Hero Header -->
+    <div class="rag-hero">
+        <a href="index.html" class="rag-back"><i class="fas fa-arrow-left"></i> Back to Store</a>
+        <button class="rag-theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">
+            <i class="fas fa-moon" id="theme-icon"></i>
+        </button>
+        <div class="rag-hero-badge"><i class="fas fa-microchip"></i> Live Demo</div>
+        <h1>RAG Pipeline Simulator</h1>
+        <p>See exactly how StepUp's AI retrieves knowledge and generates answers — step by step, in real time.</p>
+    </div>
+
+    <!-- Input Section -->
+    <div class="rag-input-section">
+        <div class="rag-input-group">
+            <input type="text" class="rag-input" id="q-input" placeholder="Ask the StepUp AI something…" value="Do you have sports shoes under 20,000 XAF?">
+            <button class="rag-run-btn" id="run-btn" onclick="runRAG()">
+                <i class="fas fa-play"></i> Run Pipeline
+            </button>
+        </div>
+        <div class="rag-presets">
+            <span class="rag-presets-label">Try:</span>
+            <button class="rag-preset-btn" onclick="setQ('What is your return policy?')"><i class="fas fa-undo"></i> Return Policy</button>
+            <button class="rag-preset-btn" onclick="setQ('Show me formal shoes')"><i class="fas fa-shoe-prints"></i> Formal Shoes</button>
+            <button class="rag-preset-btn" onclick="setQ('Who founded StepUp?')"><i class="fas fa-user-tie"></i> Founder</button>
+            <button class="rag-preset-btn" onclick="setQ('How can I pay?')"><i class="fas fa-credit-card"></i> Payment</button>
+        </div>
+    </div>
+
+    <!-- Pipeline -->
+    <div class="rag-pipeline" id="pipeline">
+
+        <!-- Stage 1: Receive Question -->
+        <div class="rag-stage idle" id="s1">
+            <div class="rag-stage-header">
+                <div class="rag-stage-icon"><i class="fas fa-comment-dots"></i></div>
+                <div class="rag-stage-info">
+                    <div class="rag-stage-title">Receive Question</div>
+                    <div class="rag-stage-sub">User query arrives at the API</div>
+                </div>
+                <div class="rag-stage-status">Waiting</div>
+            </div>
+            <div class="rag-stage-body">
+                <div class="rag-stage-body-label">Incoming Query</div>
+                <div class="rag-question-display" id="s1-q"></div>
+            </div>
+        </div>
+
+        <div class="rag-connector" id="c1"><i class="fas fa-chevron-down"></i></div>
+
+        <!-- Stage 2: Embed Question -->
+        <div class="rag-stage idle" id="s2">
+            <div class="rag-stage-header">
+                <div class="rag-stage-icon"><i class="fas fa-vector-square"></i></div>
+                <div class="rag-stage-info">
+                    <div class="rag-stage-title">Embed Question</div>
+                    <div class="rag-stage-sub">Convert text → 768-dimensional vector</div>
+                </div>
+                <div class="rag-stage-status">Waiting</div>
+            </div>
+            <div class="rag-stage-body">
+                <div class="rag-stage-body-label">Embedding Vector</div>
+                <div class="rag-embed-grid" id="embed-grid"></div>
+                <div class="rag-embed-info" id="embed-info"><i class="fas fa-spinner fa-spin"></i> Generating embedding...</div>
+            </div>
+        </div>
+
+        <div class="rag-connector" id="c2"><i class="fas fa-chevron-down"></i></div>
+
+        <!-- Stage 3: Vector Search -->
+        <div class="rag-stage idle" id="s3">
+            <div class="rag-stage-header">
+                <div class="rag-stage-icon"><i class="fas fa-search"></i></div>
+                <div class="rag-stage-info">
+                    <div class="rag-stage-title">Search Vector Database</div>
+                    <div class="rag-stage-sub">Find semantically similar document chunks</div>
+                </div>
+                <div class="rag-stage-status">Waiting</div>
+            </div>
+            <div class="rag-stage-body">
+                <div class="rag-stage-body-label">Scanning <strong>15 chunks</strong> for cosine similarity</div>
+                <div class="rag-chunk-grid" id="chunk-grid"></div>
+            </div>
+        </div>
+
+        <div class="rag-connector" id="c3"><i class="fas fa-chevron-down"></i></div>
+
+        <!-- Stage 4: Retrieve Top Chunks -->
+        <div class="rag-stage idle" id="s4">
+            <div class="rag-stage-header">
+                <div class="rag-stage-icon"><i class="fas fa-filter"></i></div>
+                <div class="rag-stage-info">
+                    <div class="rag-stage-title">Retrieve Top Chunks</div>
+                    <div class="rag-stage-sub">Keep only the most relevant documents</div>
+                </div>
+                <div class="rag-stage-status">Waiting</div>
+            </div>
+            <div class="rag-stage-body">
+                <div class="rag-stage-body-label">Top Matches by Similarity Score</div>
+                <div id="retrieved-list"></div>
+            </div>
+        </div>
+
+        <div class="rag-connector" id="c4"><i class="fas fa-chevron-down"></i></div>
+
+        <!-- Stage 5: Augment Prompt -->
+        <div class="rag-stage idle" id="s5">
+            <div class="rag-stage-header">
+                <div class="rag-stage-icon"><i class="fas fa-code"></i></div>
+                <div class="rag-stage-info">
+                    <div class="rag-stage-title">Augment the Prompt</div>
+                    <div class="rag-stage-sub">Inject context + question → Gemini</div>
+                </div>
+                <div class="rag-stage-status">Waiting</div>
+            </div>
+            <div class="rag-stage-body">
+                <div class="rag-stage-body-label">Final Prompt Sent to LLM</div>
+                <div class="rag-prompt-box" id="s5-prompt"></div>
+            </div>
+        </div>
+
+        <div class="rag-connector" id="c5"><i class="fas fa-chevron-down"></i></div>
+
+        <!-- Stage 6: Generate Answer -->
+        <div class="rag-stage idle" id="s6">
+            <div class="rag-stage-header">
+                <div class="rag-stage-icon"><i class="fas fa-robot"></i></div>
+                <div class="rag-stage-info">
+                    <div class="rag-stage-title">Generate Answer</div>
+                    <div class="rag-stage-sub">Gemini responds using only retrieved context</div>
+                </div>
+                <div class="rag-stage-status">Waiting</div>
+            </div>
+            <div class="rag-stage-body">
+                <div class="rag-stage-body-label">AI Response</div>
+                <div class="rag-answer-box" id="s6-answer"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="rag-footer">
+        <div class="rag-elapsed" id="elapsed"></div>
+        <button class="rag-reset-btn" onclick="resetAll()"><i class="fas fa-redo"></i> Reset</button>
+    </div>
+
+</div>
+
+<script>
+/* ─── Knowledge Chunks ─────────────────────────── */
+const chunks = [
+    { label:'Running Pro',       text:'Running Pro — 19,999 XAF. High-performance running shoes. Category: Sports.',     tags:['sports','price'] },
+    { label:'Hiking Boots',      text:'Hiking Boots — 18,000 XAF. Waterproof hiking boots. Category: Sports.',            tags:['sports','price'] },
+    { label:'Trail Running',     text:'Trail Running Shoes — 22,000 XAF. Off-road grip. Category: Sports.',               tags:['sports','price'] },
+    { label:'Football Cleats',   text:'Football Cleats — 16,500 XAF. Firm-ground speed. Category: Sports.',               tags:['sports','price'] },
+    { label:'Gym Trainers',      text:'Gym Training Shoes — 15,000 XAF. Cross-training. Category: Sports.',               tags:['sports','price'] },
+    { label:'White Sneakers',    text:'Classic White Sneakers — 5,500 XAF. Everyday comfort. Category: Sneakers.',         tags:['sneakers','price'] },
+    { label:'Basketball Shoes',  text:'High-Top Basketball — 14,500 XAF. Ankle support. Category: Sneakers.',             tags:['sneakers','price'] },
+    { label:'Leather Oxford',    text:'Leather Oxford — 12,000 XAF. Formal elegance. Category: Formal.',                  tags:['formal','price'] },
+    { label:'Loafers',           text:'Loafers — 9,000 XAF. Smart casual. Category: Formal.',                             tags:['formal','price'] },
+    { label:'Summer Sandals',    text:'Summer Sandals — 4,000 XAF. Breathable. Category: Sandals.',                       tags:['sandals','price'] },
+    { label:'Return Policy',     text:'30-day returns, no questions asked. Unworn with packaging.',                        tags:['policy'] },
+    { label:'Delivery Info',     text:'Free delivery Cameroon-wide. 3-7 days Buea, 7-14 others.',                         tags:['policy','delivery'] },
+    { label:'Payment Methods',   text:'Accepts MTN MoMo and Orange Money only.',                                           tags:['payment','policy'] },
+    { label:'About StepUp',     text:'Founded 2024 by Charles Tabe. Molyko, Buea, Cameroon.',                             tags:['about'] },
+    { label:'Contact Info',      text:'Phone: (237) 671353341. Email: rickytabe2@gmail.com.',                              tags:['contact'] },
+];
+
+const scenarios = {
+    default: { top:[0,1,4,3], answer:"Yes! We have great sports options under 20,000 XAF: Running Pro (19,999 XAF) with advanced cushioning, Hiking Boots (18,000 XAF) with waterproof membrane, Gym Training Shoes (15,000 XAF) for workouts, and Football Cleats (16,500 XAF) for the pitch. Want me to help you choose?" },
+    return:  { top:[10,11,12], answer:"StepUp offers a 30-day no-questions-asked return policy. Items must be unworn with original packaging. Once we receive the return, refunds are processed within 7–10 business days. Need help starting a return?" },
+    formal:  { top:[7,8,5,6],  answer:"We have several formal shoe options: Leather Oxford Shoes at 12,000 XAF for elegance, Loafers at 9,000 XAF for smart-casual. All available now — which style suits you?" },
+    founder: { top:[13,14,11], answer:"StepUp was founded in 2024 by Mr Charles Tabe in Molyko, Buea, Cameroon. The mission is to bring world-class imported footwear to Cameroon at wholesale prices. You can reach us at (237) 671353341." },
+    payment: { top:[12,11,13], answer:"StepUp currently accepts MTN Mobile Money and Orange Money. After checkout, you'll be prompted to enter your phone number to complete the MoMo payment. Need help with the payment steps?" },
+};
+
+let isRunning = false;
+let startTime = 0;
+let elapsedInterval = null;
+
+function getScenario(q) {
+    const ql = q.toLowerCase();
+    if (ql.includes('return') || ql.includes('refund')) return scenarios.return;
+    if (ql.includes('formal') || ql.includes('oxford') || ql.includes('loafer')) return scenarios.formal;
+    if (ql.includes('founder') || ql.includes('who') || ql.includes('charles') || ql.includes('about')) return scenarios.founder;
+    if (ql.includes('pay') || ql.includes('momo') || ql.includes('orange') || ql.includes('mtn')) return scenarios.payment;
+    return scenarios.default;
+}
+
+function setQ(q) { document.getElementById('q-input').value = q; }
+
+function resetAll() {
+    isRunning = false;
+    clearInterval(elapsedInterval);
+    document.getElementById('elapsed').textContent = '';
+    document.getElementById('run-btn').classList.remove('is-running');
+    ['s1','s2','s3','s4','s5','s6'].forEach(id => {
+        const el = document.getElementById(id);
+        el.className = 'rag-stage idle';
+        el.querySelector('.rag-stage-status').textContent = 'Waiting';
+    });
+    ['c1','c2','c3','c4','c5'].forEach(id => {
+        document.getElementById(id).classList.remove('done-connector');
+    });
+}
+
+function activateStage(id) {
+    const el = document.getElementById(id);
+    el.classList.remove('idle');
+    el.classList.add('active');
+    el.querySelector('.rag-stage-status').textContent = 'Running';
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function doneStage(id, connectorId) {
+    const el = document.getElementById(id);
+    el.classList.remove('active');
+    el.classList.add('done');
+    el.querySelector('.rag-stage-status').textContent = 'Done';
+    el.querySelector('.rag-stage-icon').innerHTML = '<i class="fas fa-check"></i>';
+    if (connectorId) {
+        document.getElementById(connectorId).classList.add('done-connector');
+    }
+}
+
+function runRAG() {
+    if (isRunning) return;
+    isRunning = true;
+    resetAll();
+    isRunning = true;
+    document.getElementById('run-btn').classList.add('is-running');
+
+    const q = document.getElementById('q-input').value.trim() || 'Do you have sports shoes under 20,000 XAF?';
+    const scene = getScenario(q);
+
+    startTime = Date.now();
+    elapsedInterval = setInterval(() => {
+        const ms = Date.now() - startTime;
+        document.getElementById('elapsed').textContent = `⏱ ${(ms / 1000).toFixed(1)}s elapsed`;
+    }, 100);
+
+    let t = 0;
+    const step = (ms, fn) => { t += ms; setTimeout(fn, t); };
+
+    // Stage 1
+    step(200, () => {
+        activateStage('s1');
+        document.getElementById('s1-q').textContent = q;
+    });
+
+    // Stage 2
+    step(900, () => {
+        doneStage('s1', 'c1');
+        activateStage('s2');
+        const grid = document.getElementById('embed-grid');
+        grid.innerHTML = '';
+        for (let i = 0; i < 120; i++) {
+            const d = document.createElement('div');
+            d.className = 'rag-embed-dot';
+            grid.appendChild(d);
+        }
+        document.getElementById('embed-info').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating embedding vector…';
+        let lit = 0;
+        const iv = setInterval(() => {
+            const dots = grid.querySelectorAll('.rag-embed-dot');
+            if (lit < dots.length) { dots[lit].classList.add('lit'); lit++; }
+            else clearInterval(iv);
+        }, 12);
+    });
+
+    step(2200, () => {
+        document.getElementById('embed-info').innerHTML = '<i class="fas fa-check-circle"></i> Vector ready — 768 dimensions encoded';
+    });
+
+    // Stage 3
+    step(2800, () => {
+        doneStage('s2', 'c2');
+        activateStage('s3');
+        const grid = document.getElementById('chunk-grid');
+        grid.innerHTML = '';
+        chunks.forEach((c, i) => {
+            const el = document.createElement('div');
+            el.className = 'rag-chunk';
+            el.id = 'chunk-' + i;
+            el.textContent = c.label;
+            grid.appendChild(el);
+        });
+        let i = 0;
+        const scan = setInterval(() => {
+            if (i < chunks.length) {
+                document.getElementById('chunk-' + i).classList.add('scanning');
+                if (i > 0) document.getElementById('chunk-' + (i - 1)).classList.remove('scanning');
+                i++;
+            } else {
+                clearInterval(scan);
+                // Mark retrieved
+                chunks.forEach((_, idx) => {
+                    const chunkEl = document.getElementById('chunk-' + idx);
+                    chunkEl.classList.remove('scanning');
+                    if (scene.top.includes(idx)) {
+                        chunkEl.classList.add('retrieved');
+                    } else {
+                        chunkEl.classList.add('not-matched');
+                    }
+                });
+            }
+        }, 70);
+    });
+
+    // Stage 4
+    step(5200, () => {
+        doneStage('s3', 'c3');
+        activateStage('s4');
+        const list = document.getElementById('retrieved-list');
+        list.innerHTML = '';
+        scene.top.forEach((idx, rank) => {
+            const score = (0.97 - rank * 0.06).toFixed(2);
+            const scoreClass = score >= 0.90 ? 'rag-score-high' : score >= 0.80 ? 'rag-score-med' : 'rag-score-low';
+            const item = document.createElement('div');
+            item.className = 'rag-retrieved-item';
+            item.innerHTML = `
+                <div class="rag-retrieved-rank">#${rank + 1}</div>
+                <div class="rag-retrieved-name">${chunks[idx].label}</div>
+                <div class="rag-retrieved-score ${scoreClass}">${score}</div>
+            `;
+            list.appendChild(item);
+        });
+    });
+
+    // Stage 5
+    step(6600, () => {
+        doneStage('s4', 'c4');
+        activateStage('s5');
+        const topText = scene.top.map(i => `  • ${chunks[i].text}`).join('\n');
+        const promptEl = document.getElementById('s5-prompt');
+        promptEl.innerHTML =
+`<span class="sys">SYSTEM:</span> You are Sole, StepUp's AI assistant.
+Answer ONLY using the context below. Never hallucinate.
+
+<span class="ctx">RETRIEVED CONTEXT:</span>
+${topText}
+
+<span class="usr">USER:</span> ${q}`;
+    });
+
+    // Stage 6
+    step(8000, () => {
+        doneStage('s5', 'c5');
+        activateStage('s6');
+        const box = document.getElementById('s6-answer');
+        box.classList.add('typing');
+        box.textContent = '';
+        const ans = scene.answer;
+        let ci = 0;
+        const typewriter = setInterval(() => {
+            if (ci < ans.length) {
+                box.textContent += ans[ci++];
+            } else {
+                clearInterval(typewriter);
+                box.classList.remove('typing');
+                doneStage('s6');
+                isRunning = false;
+                clearInterval(elapsedInterval);
+                const ms = Date.now() - startTime;
+                document.getElementById('elapsed').textContent = `✅ Completed in ${(ms / 1000).toFixed(1)}s`;
+                document.getElementById('run-btn').classList.remove('is-running');
+            }
+        }, 16);
+    });
+}
+
+/* ─── Theme Toggle ──────────────────────────────── */
+function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateThemeIcon();
+}
+
+function updateThemeIcon() {
+    const theme = document.documentElement.getAttribute('data-theme');
+    const icon = document.getElementById('theme-icon');
+    icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+}
+
+document.addEventListener('DOMContentLoaded', updateThemeIcon);
+</script>
+</body>
+</html>
