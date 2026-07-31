@@ -2,7 +2,7 @@
     'use strict';
 
     const STORE_URL = 'store-data.json';
-    const GEMINI_API_KEY = 'AQ.Ab8RN6J69vAcUYkbZ-qe-eYKrSirlPTJCdIQcGSp_8xPkvNyKA';
+    const GEMINI_API_KEY = 'AQ.Ab8RN6LtBc6dVg3hrstwpAqOJfhQ75wOsLGUyqdRvnq1uyJ5SA'; // Replace with a valid API Key from Google AI Studio (starts with AIza...)
     const GEMINI_MODEL = 'gemini-3.1-flash-lite';
     const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
     const DEFAULT_SUGGESTIONS = [
