@@ -11,6 +11,7 @@
         'Where is StepUp located?'
     ];
 
+    
     document.addEventListener('DOMContentLoaded', initChatAgent);
 
     function initChatAgent() {
